@@ -181,49 +181,33 @@ margin-left:1px;
     
     position: relative;
     border-radius: 20px;
-    overflow: hidden;   
-    background-color: #111; /* Provides the dark foundation backing */
-    z-index: 1;
-}
+    
+    /* 1. THE COOKIE CUTTER: Slices your colors perfectly into the capsule shape */
+    -webkit-mask-image: url('HP bar 200px.webp');
+    mask-image: url('HP bar 200px.webp');
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 
-/* MASTER FRAME LAYER (Sits completely on top of colors, but under text) */
-.job-container::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url('HP bar 200px.webp');
-    background-size: 100% 130%; 
-    background-position: center;
-    background-repeat: no-repeat;
+    /* Flips it vertically to mirror your design layout choice */
+    transform: scaleY(-1); 
     
-    /* FIXED: Changed to simple flip so the inner frame lines don't get warped or cut off */
-    transform: scaleY(-1);       
-    pointer-events: none;        
-    
-    /* Sits directly above the background colors, but stays behind the text wrapper */
-    z-index: 5; 
+    background-color: #111; 
+    z-index: 1;
 }
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-    /* FIXED: Forces the color slots to fill 100% of the available width together */
     flex: 1 1 100%;      
     min-width: 0;        
-    
-    /* FIXED: Stretches the background color bars to fill the entire container height */
-    height: 100%;        
+    height: 100%; /* Fills the panel vertically completely */       
     position: relative;
+    
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Sits right on the bottom layer base */
     z-index: 2; 
-
-    /* FIXED: Do NOT use opacity here or the text becomes transparent too! 
-       Your JavaScript color hex strings already contain 'dd' (alpha transparency), 
-       so we let the native engine color it safely. */
-    opacity: 1; 
 }
 
 /* Ensure the background color maps cleanly from your JS inline styles */
@@ -231,24 +215,25 @@ margin-left:1px;
     background-color: var(--job-color, inherit); 
 }
 
-/* THE TEXT WRAPPER 
-   This explicitly hovers the text labels over the frame layer boundary */
+/* THE TEXT WRAPPER */
 .job-text-span {
+    display: inline-block;
     position: relative;
     
-    /* CRITICAL FIXED LAYER: Pushes the text stack clear over the ::after border frame asset! */
-    z-index: 10; 
+    /* 2. THE TEXT FIX: Because the parent container is flipped via scaleY(-1), 
+       the text gets turned upside down. This counter-flips it right-side up! */
+    transform: scaleY(-1); 
     
+    z-index: 10; /* Hovers safely above the background mask context */
     font-size: 9px;      
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
-    
-    /* Enhanced text pop to stand out sharply on highly saturated class colors */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9), -1px -1px 2px rgba(0, 0, 0, 0.9); 
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9); 
 }
 
-/* Clean up any lingering pseudo elements */
+/* Completely remove the pseudo element overlay layer since the mask does all the heavy lifting! */
+.job-container::after,
 .job-bar::before,
 .job-bar::after {
     display: none !important;
