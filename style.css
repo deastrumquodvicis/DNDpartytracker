@@ -170,11 +170,9 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE TRACK CONTROLLER: Handles the structural layout sizing */
+/* THE TRACK CONTROLLER */
 .job-container {
     display: flex;
-    /* FIXED: Set gap to 0px and added a subtle negative margin if needed. 
-       This pulls multiclass capsules closer together. */
     gap: 0px;            
     width: 140px;        
     height: 22px;        
@@ -195,24 +193,28 @@ margin-left:1px;
     min-width: 0;        
     height: 100%;        
     position: relative;
-    margin: 0 -4px;
+    
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: transparent !important; 
     z-index: 2; 
+
+    /* FIXED: This negative margin pulls the individual multiclass capsules 
+       closer together. Adjust from -4px to -2px or -6px if you want to fine-tune 
+       the gap distance perfectly! */
+    margin: 0 -4px; 
 }
 
-/* 1. THE PILL NEON BACKPLATE (Bottom of the pill sandwich) */
+/* 1. THE PILL NEON BACKPLATE */
 .job-bar::before {
     content: "";
     position: absolute;
 
-    /* Scales the capsule down perfectly to your size parameters */
-    top: 17.5%;      /* Centered vertically: (100 - 65) / 2 */
-    height: 65%;     /* 65% Height */
-    left: 5%;        /* Centered horizontally: (100 - 90) / 2 */
-    width: 90%;      /* 90% Width */
+    top: 17.5%;      
+    height: 65%;     
+    left: 5%;        
+    width: 90%;      
     
     background-image: url('HP bar 200px.webp');
     background-size: 100% 100%; 
@@ -223,30 +225,26 @@ margin-left:1px;
     z-index: 1; 
 }
 
-/* 2. THE PILL COLOR CHIP (Middle of the pill sandwich) */
+/* 2. THE PILL COLOR CHIP */
 .job-bar::after {
     content: "";
     position: absolute;
     
-    /* TARGETED FIX: Switched from percentages to an absolute inset system.
-       This explicitly locks the color boundaries relative to the ::before asset box.
-       - 'top' and 'bottom' values match your vertical centering.
-       - Adjust 'left' and 'right' values in pixels to perfectly align the edges! */
+    /* FIXED: Using matching absolute pixel parameters to keep the color 
+       fill perfectly centered inside the capsule across all splits. */
     top: 22%;
     bottom: 22%;
-    left: 11%;    /* Shrink or increase this pixel value to tuck the left side cleanly into the neon line */
-    right: 5%;    /* Insets the right side to balance it within the capsule shape */
+    left: 7px;     
+    right: 7px;    
     
     background-color: var(--job-color, inherit); 
-    
-    /* Matches the exact curvature of the inner capsule asset channel */
-    border-radius: 4px; 
+    border-radius: 5px; 
     
     pointer-events: none;
     z-index: 2; 
 }
 
-/* 3. THE TEXT WRAPPER (Top Layer Surface) */
+/* 3. THE TEXT WRAPPER */
 .job-text-span {
     position: relative;
     z-index: 10; 
@@ -255,8 +253,6 @@ margin-left:1px;
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
-    
-    /* Adding text shadow back ensures readability over dark background colors */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
 /* ---------------- FORM PANEL ---------------- */
