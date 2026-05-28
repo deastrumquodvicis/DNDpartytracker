@@ -6,7 +6,7 @@ let partyData = [
         name: "Dea",
         current: 30,
         max: 30,
-        portrait: "images/dannika.png",
+        portrait: "images/placeholder.png",
         pronouns: "they/them",
         player: "Stream",
         jobs: ["wizard"]
@@ -15,7 +15,7 @@ let partyData = [
         name: "Bruh",
         current: 20,
         max: 35,
-        portrait: "images/ayame.png",
+        portrait: "images/placeholder.png",
         pronouns: "he/him",
         player: "Josh",
         jobs: ["fighter", "rogue"]
