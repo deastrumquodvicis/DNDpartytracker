@@ -88,8 +88,8 @@ body {
 }
 
 .char-image {
-    max-width: 120px;
-    max-height: 120px;
+    max-width: 130px;
+    max-height: 130px;
 
     object-fit: contain;
 
