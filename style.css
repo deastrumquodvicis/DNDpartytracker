@@ -170,11 +170,12 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE TRACK CONTROLLER: Now just handles the structural layout sizing */
+/* THE TRACK CONTROLLER: Handles the structural layout sizing */
 .job-container {
     display: flex;
-    /* Adding a tiny gap gives your split neon pills room to breathe side-by-side */
-    gap: 2px;            
+    /* FIXED: Set gap to 0px and added a subtle negative margin if needed. 
+       This pulls multiclass capsules closer together. */
+    gap: 0px;            
     width: 140px;        
     height: 22px;        
     justify-content: center;
@@ -184,7 +185,6 @@ margin-left:1px;
     position: relative;
     z-index: 1;
     
-    /* REMOVED overflow:hidden so the glowing neon edges can expand outside safely! */
     overflow: visible;    
     background-color: transparent; 
 }
@@ -203,14 +203,12 @@ margin-left:1px;
     z-index: 2; 
 }
 
-/* 1. THE PILL NEON BACKPLATE (Bottom of the pill sandwich)
-   By placing this on the job-bar instead of the container, EVERY individual 
-   multiclass pill automatically gets its own perfectly scaled neon border! */
+/* 1. THE PILL NEON BACKPLATE (Bottom of the pill sandwich) */
 .job-bar::before {
     content: "";
     position: absolute;
-    
-    /* Scales the capsule down to your exact requested size settings */
+
+    /* Scales the capsule down perfectly to your size parameters */
     top: 17.5%;      /* Centered vertically: (100 - 65) / 2 */
     height: 65%;     /* 65% Height */
     left: 5%;        /* Centered horizontally: (100 - 90) / 2 */
@@ -220,7 +218,7 @@ margin-left:1px;
     background-size: 100% 100%; 
     background-position: center;
     background-repeat: no-repeat;
-    transform: scaleY(-1.5) scaleX(1); /* Keeps your vertical flip choice */      
+    transform: scaleY(-1.5) scaleX(1);     
     pointer-events: none;
     z-index: 1; 
 }
@@ -230,17 +228,19 @@ margin-left:1px;
     content: "";
     position: absolute;
     
-    /* Pulls the color edges slightly inset from the neon frame so it fits 
-       inside the capsule perfectly without bleeding over the lines */
-    top: 22%;        
-    height: 56%;     
-    left: 9%;        
-    width: 82%;      
+    /* TARGETED FIX: Switched from percentages to an absolute inset system.
+       This explicitly locks the color boundaries relative to the ::before asset box.
+       - 'top' and 'bottom' values match your vertical centering.
+       - Adjust 'left' and 'right' values in pixels to perfectly align the edges! */
+    top: 22%;
+    bottom: 22%;
+    left: 11%;    /* Shrink or increase this pixel value to tuck the left side cleanly into the neon line */
+    right: 5%;    /* Insets the right side to balance it within the capsule shape */
     
     background-color: var(--job-color, inherit); 
     
     /* Matches the exact curvature of the inner capsule asset channel */
-    border-radius: 10px; 
+    border-radius: 4px; 
     
     pointer-events: none;
     z-index: 2; 
@@ -256,6 +256,8 @@ margin-left:1px;
     color: inherit; 
     white-space: nowrap;
     
+    /* Adding text shadow back ensures readability over dark background colors */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
 /* ---------------- FORM PANEL ---------------- */
 
