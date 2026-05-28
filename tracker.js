@@ -4,6 +4,7 @@ var MASTER_KEY = "$2a$10$9c4468sUxAYIXJeHOiWzleiSswaWsA43em.565yokW2ueiaQSWU.K";
 var urlParams = new URLSearchParams(window.location.search);
 var isViewMode = urlParams.get('mode') === 'view';
 
+
 window.addEventListener('DOMContentLoaded', function() {
     var panel = document.getElementById('ui-controls');
     if (panel && isViewMode) {
