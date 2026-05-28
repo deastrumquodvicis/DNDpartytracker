@@ -145,7 +145,7 @@ body {
 .progress-bar {
     height: 68%;
     border-radius: 10px;
-    transition: width 0.7s ease, background-color 0.7s ease;
+    transition: width 1.5s ease, background-color 1.5s ease;
 margin-left:1px;
     margin-top: 3%;
     max-width: 100%;
