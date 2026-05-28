@@ -160,7 +160,7 @@ body {
     font-size: 0.9rem;
     color: white !important;
     text-align: center;
-    margin-top: -27px; /* Pulls the text upward directly into the progress box smoothly */
+    margin-top: -25px; /* Pulls the text upward directly into the progress box smoothly */
     margin-bottom: 5px; /* Adds space before the job elements below it */
     text-shadow: 1px 1px 2px black;
     position: relative;
