@@ -238,7 +238,7 @@ margin-left:1px;
     right: 7px;    
     
     background-color: var(--job-color, inherit); 
-    border-radius: 5px; 
+    border-radius: 10px; 
     
     pointer-events: none;
     z-index: 2; 
