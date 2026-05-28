@@ -133,7 +133,6 @@ function buildJobBars(jobs = []) {
     return jobs.map(job => {
         const style = jobStyles[job] || { color: "#666666aa", text: "#fff" };
         
-        // If 3+ jobs, grab the manual abbreviation. Otherwise, grab the pretty full label.
         const label = useAbbr 
             ? (jobAbbreviations[job] || job.slice(0,4).toUpperCase())
             : (jobFullLabels[job] || job);
@@ -141,7 +140,7 @@ function buildJobBars(jobs = []) {
         return `
         <div class="job-bar ${job}"
             style="background-color:${style.color}; color:${style.text}">
-            ${label}
+            <span class="job-text-span">${label}</span>
         </div>`;
     }).join("");
 }
