@@ -160,7 +160,8 @@ function buildUI() {
             <div class="char-player">${char.player}</div>
 
         </div>`;
-  // Pull the character's jobs, filling empty slots up to 3 with empty strings
+
+        // Pull the character's jobs, filling empty slots up to 3 with empty strings
         const charJobs = [...char.jobs];
         while (charJobs.length < 3) {
             charJobs.push(""); 
@@ -221,7 +222,20 @@ function buildUI() {
     });
 
     target.innerHTML = overlay;
-    if (!isViewMode && forms) forms.innerHTML = editor;
+    
+    if (!isViewMode && forms) {
+        forms.innerHTML = editor;
+        
+        // Append the setup for the "+ Add New Character" button at the bottom of the editor list
+        const addButtonHtml = `
+            <div style="padding: 10px 0;">
+                <button onclick="addCharacter()" style="background: #e76eff; color: #111; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-family: 'Aldrich', sans-serif; cursor: pointer; width: 100%; font-size: 0.9rem;">
+                    + Add New Character
+                </button>
+            </div>
+        `;
+        forms.insertAdjacentHTML('beforeend', addButtonHtml);
+    }
 }
 
 /* ---------------- UPDATE ---------------- */
@@ -254,24 +268,42 @@ function updateField(i, field, value) {
     partyData[i][field] = value;
     updateOverlayOnly();
 }
+
 function updateJob(charIndex, jobIndex, newJobValue) {
-    // 1. Ensure the jobs array exists
     if (!partyData[charIndex].jobs) partyData[charIndex].jobs = [];
     
-    // 2. Pad array with empty strings if it's missing slots up to the edited index
     while (partyData[charIndex].jobs.length <= jobIndex) {
         partyData[charIndex].jobs.push("");
     }
     
-    // 3. Update target slot
     partyData[charIndex].jobs[jobIndex] = newJobValue;
-    
-    // 4. Clean out empty elements so data stays clean (e.g. ["wizard", ""]) becomes ["wizard"]
     partyData[charIndex].jobs = partyData[charIndex].jobs.filter(j => j !== "");
     
-    // 5. Force a total UI rebuild to redraw the updated job configuration
     buildUI(); 
 }
+
+function addCharacter() {
+    const newChar = {
+        name: "New Hero",
+        current: 10,
+        max: 10,
+        portrait: availablePortraits[0] || "images/placeholder.png",
+        pronouns: "they/them",
+        player: "Player Name",
+        jobs: ["wizard"]
+    };
+
+    partyData.push(newChar);
+    buildUI();
+}
+
+function removeCharacter(i) {
+    if (confirm(`Are you sure you want to remove ${partyData[i].name || 'this character'}?`)) {
+        partyData.splice(i, 1);
+        buildUI();
+    }
+}
+
 /* ---------------- INIT ---------------- */
 
 window.addEventListener("DOMContentLoaded", buildUI);
