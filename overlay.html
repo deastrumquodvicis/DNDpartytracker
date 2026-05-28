@@ -61,7 +61,7 @@
         .char-slot, .progress { overflow: visible !important; }
         
         .control-panel h3 { margin: 0 0 10px 0; color: cyan; font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 5px;}
-        .char-form-block { background: #252533; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 4px solid #e76eff; }
+        .char-form-block { background: #252533; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 4px solid #e76eff; position: relative;}
         .form-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
         .form-row label { width: 50px; font-size: 0.8rem; color: #ccc; }
         .control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 4px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
@@ -90,11 +90,8 @@
         .btn-add:hover { background: #00b30f; }
         .btn-toggle { background: #44445c; color: #fff; width: auto !important; white-space: nowrap; }
         .btn-toggle:hover { background: #555570; }
-        .btn-remove { background: #ff3333; color: #fff; margin-top: 10px; font-size: 0.75rem; padding: 4px; }
+        .btn-remove { background: #ff3333; color: #fff; margin-top: 10px; font-size: 0.75rem; padding: 4px; width: 100%; }
         .btn-remove:hover { background: #cc0000; }
-        
-        /* Hidden layout container for our iframe hook */
-        #bridge-frame { display: none !important; }
     </style>
 </head>
 <body>
@@ -107,9 +104,8 @@
         <div id="party-target" class="party-container"></div>
     </div>
 </div>
-<!-- This hidden bridge lets the stream capture window grab your browser's exact data -->
-<iframe id="bridge-frame" src="about:blank"></iframe>
 <script>
+// Detect layout behavior settings based on the URL query flag safely
 var urlParams = new URLSearchParams(window.location.search);
 var isViewMode = urlParams.get('mode') === 'view';
 
@@ -119,6 +115,9 @@ window.addEventListener('DOMContentLoaded', function() {
         panel.classList.add('hidden');
     }
 });
+
+// Private cross-window network pipeline for your live website URL
+var streamChannel = new BroadcastChannel('stream_party_hotline');
 
 var defaultParty = [
     { name: "Dea", current: 30, max: 30, pronouns: "they/them", class1: "wizard", class2: "none", player: "Stream", portrait: "red_mage.png" },
@@ -146,6 +145,107 @@ var availableClasses = [
     { id: "wizard", label: "Wizard" },
     { id: "bug", label: "Bug (Test)" }
 ];
+function initialBuild() {
+    var target = document.getElementById('party-target');
+    var formsContainer = document.getElementById('forms-container');
+    
+    var htmlContent = '';
+    var formContent = '<div class="global-controls">' +
+        '<button class="btn btn-add" onclick="addNewCharacter()">➕ Add Character</button>' +
+        '<button class="btn btn-toggle" onclick="toggleOverlayArea()">👁️ Hide Panels</button>' +
+    '</div>';
+
+    partyData.forEach(function(char, index) {
+        // 1. Build clean stream display graphics layout
+        htmlContent += '<div class="char-slot" id="p' + index + '">' +
+            '<div class="portrait-area">' +
+                '<img id="stream-img-' + index + '" class="char-image" src="' + char.portrait + '" onerror="this.style.display=\'none\'">' +
+            '</div>' +
+            '<div class="progress">' +
+                '<div id="stream-bar-' + index + '" class="progress-bar green"></div>' +
+            '</div>' +
+            '<div id="stream-hptext-' + index + '" class="hp-text">0 / 0</div>' +
+            '<div id="stream-name-' + index + '" class="char-name">' + char.name + '</div>' +
+            '<div id="stream-pronouns-' + index + '" class="char-pronouns">' + char.pronouns + '</div>' +
+            '<div class="class-bars-container">' +
+                '<div id="stream-class1-' + index + '" class="class-type-bar"></div>' +
+                '<div id="stream-class2-' + index + '" class="class-type-bar"></div>' +
+            '</div>' +
+            '<div id="stream-player-' + index + '" class="char-player">' + char.player + '</div>' +
+        '</div>';
+
+        // 2. Build dashboard dropdown options
+        var class1Options = '';
+        availableClasses.forEach(function(cls) {
+            if(cls.id !== 'none') {
+                var selected = (char.class1 === cls.id) ? 'selected' : '';
+                class1Options += '<option value="' + cls.id + '" ' + selected + '>' + cls.label + '</option>';
+            }
+        });
+
+        var class2Options = '';
+        availableClasses.forEach(function(cls) {
+            var selected = (char.class2 === cls.id) ? 'selected' : '';
+            class2Options += '<option value="' + cls.id + '" ' + selected + '>' + cls.label + '</option>';
+        });
+
+        var portraitOptions = '';
+        availablePortraits.forEach(function(img) {
+            var selected = (char.portrait === img) ? 'selected' : '';
+            portraitOptions += '<option value="' + img + '" ' + selected + '>' + img + '</option>';
+        });
+
+        // 3. Build live configuration dashboard modules
+        formContent += '<div class="char-form-block">' +
+            '<strong id="ui-title-' + index + '">Slot ' + (index + 1) + ': ' + (char.name || 'Unnamed') + '</strong>' +
+            '<div class="form-row" style="margin-top:5px;">' +
+                '<label>HP:</label>' +
+                '<div class="hp-inputs">' +
+                    '<input type="number" id="input-curr-' + index + '" value="' + char.current + '" oninput="updateField(' + index + ', \'current\', this.value)" title="Current HP">' +
+                    '<span>/</span>' +
+                    '<input type="number" id="input-max-' + index + '" value="' + char.max + '" oninput="updateField(' + index + ', \'max\', this.value)" title="Max HP">' +
+                '</div>' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Name:</label>' +
+                '<input type="text" value="' + char.name + '" oninput="updateField(' + index + ', \'name\', this.value)">' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Pronouns:</label>' +
+                '<input type="text" value="' + char.pronouns + '" oninput="updateField(' + index + ', \'pronouns\', this.value)">' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Player:</label>' +
+                '<input type="text" value="' + char.player + '" oninput="updateField(' + index + ', \'player\', this.value)">' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Class 1:</label>' +
+                '<select onchange="updateField(' + index + ', \'class1\', this.value)">' +
+                    class1Options +
+                '</select>' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Class 2:</label>' +
+                '<select onchange="updateField(' + index + ', \'class2\', this.value)">' +
+                    class2Options +
+                '</select>' +
+            '</div>' +
+            '<div class="form-row">' +
+                '<label>Portrait:</label>' +
+                '<select onchange="updateField(' + index + ', \'portrait\', this.value)">' +
+                    portraitOptions +
+                '</select>' +
+            '</div>' +
+            '<button class="btn btn-remove" onclick="removeCharacter(' + index + ')">❌ Remove Character</button>' +
+        '</div>';
+    });
+
+    if (target) target.innerHTML = htmlContent;
+    if (formsContainer) formsContainer.innerHTML = formContent;
+    
+    updateVisualsOnly();
+}
+
 function updateVisualsOnly() {
     partyData.forEach(function(char, index) {
         var percent = Math.min(Math.max((char.current / char.max) * 100, 0), 100);
@@ -227,6 +327,8 @@ function updateField(index, field, value) {
         partyData[index][field] = value;
     }
     updateVisualsOnly();
+    // Broadcast text modifications instantly over the secure network pipeline
+    streamChannel.postMessage({ type: 'UPDATE_DATA', data: partyData });
 }
 
 function addNewCharacter() {
@@ -234,12 +336,14 @@ function addNewCharacter() {
         name: "New Hero", current: 10, max: 10, pronouns: "they/them", class1: "fighter", class2: "none", player: "Guest", portrait: "warrior.png"
     });
     initialBuild();
+    streamChannel.postMessage({ type: 'REDRAW_ALL', data: partyData });
 }
 
 function removeCharacter(index) {
     if (confirm("Are you sure you want to delete this slot?")) {
         partyData.splice(index, 1);
         initialBuild();
+        streamChannel.postMessage({ type: 'REDRAW_ALL', data: partyData });
     }
 }
 
@@ -250,37 +354,18 @@ function toggleOverlayArea() {
     }
 }
 
-// 🌐 THE SECURE LOCAL MEMORY SYNC ENGINE
-if (isViewMode) {
-    window.addEventListener('DOMContentLoaded', function() {
-        var bridge = document.getElementById('bridge-frame');
-        if (bridge) {
-            bridge.src = 'overlay.html';
-            
-            setInterval(function() {
-                try {
-                    var crossData = bridge.contentWindow.localStorage.getItem('ff1_stream_party');
-                    if (crossData) {
-                        var parsed = JSON.parse(crossData);
-                        if (JSON.stringify(parsed) !== JSON.stringify(partyData)) {
-                            var structuralShift = parsed.length !== partyData.length;
-                            partyData = parsed;
-                            if (structuralShift) {
-                                initialBuild();
-                            } else {
-                                updateVisualsOnly();
-                            }
-                        }
-                    }
-                } catch(e) {
-                    // Fail silently and retry next loop if cross-origin lock hits momentarily
-                }
-            }, 500);
+// Catch network transmissions sent from your active dashboard window
+streamChannel.onmessage = function(event) {
+    if (event.data && event.data.data) {
+        partyData = event.data.data;
+        if (event.data.type === 'REDRAW_ALL') {
+            initialBuild();
+        } else {
+            updateVisualsOnly();
         }
-    });
-}
+    }
+};
 
-// Execute on script boot
 initialBuild();
 </script>
 </body>
