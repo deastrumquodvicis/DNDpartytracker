@@ -181,8 +181,7 @@ body {
     
     position: relative;
     border-radius: 10px;
-    overflow: hidden;    
-    background-color: #111; 
+    overflow: hidden;   
     z-index: 1;
 }
 
@@ -203,7 +202,7 @@ body {
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-    flex: 1 1 75%;      
+    flex: 1 1 65%;      
     min-width: 0;        
     height: 80%;        
     position: relative;
