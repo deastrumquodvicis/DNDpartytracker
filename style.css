@@ -93,8 +93,8 @@ body {
 
 /* Character is at 0 HP: Drain color and dim the portrait */
 .dead-portrait {
-    filter: grayscale(100%) brightness(66%);
-    transition: filter 0.3s ease; /* Smooth transition when they go down! */
+    filter: grayscale(100%) brightness(85%);
+    transition: filter 0.75s ease; /* Smooth transition when they go down! */
 }
 /* ---------------- TEXT ---------------- */
 
