@@ -1,12 +1,9 @@
-html,
-body {
+html, body {
     width: 100%;
     height: 100%;
     padding: 0;
     margin: 0;
-
     background: transparent !important;
-
     font-family: 'Aldrich', sans-serif;
     overflow: hidden;
 }
@@ -15,126 +12,247 @@ body {
     box-sizing: border-box;
 }
 
+/* -----------------------
+   LAYOUT
+------------------------ */
 
-.master-container { display: flex; width: 100%; height: 100vh; position: relative;}
+.master-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
 
 .control-panel {
-    width: 380px; background: #1a1a24; color: #fff; padding: 15px;
-    box-sizing: border-box; overflow-y: auto; border-right: 3px solid #333; z-index: 999;
+    width: 380px;
+    background: #1a1a24;
+    color: #fff;
+    padding: 15px;
+    overflow-y: auto;
+    border-right: 3px solid #333;
+    z-index: 999;
 }
 
-.control-panel.hidden { display: none !important; }
-.stream-overlay-area { flex-grow: 1; background: transparent; position: relative; overflow: hidden; }
+.control-panel.hidden {
+    display: none !important;
+}
+
+.stream-overlay-area {
+    flex-grow: 1;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+/* -----------------------
+   PARTY GRID
+------------------------ */
 
 .party-container {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
-    padding: 20px; align-items: flex-start; width: 100%; box-sizing: border-box;
-}
-.char-slot {
-    width: 140px; display: flex; padding-left: 10px; padding-right: 10px;
-    flex-direction: column; align-items: center; background-color: transparent; overflow: visible !important;
-}
-.portrait-area {
-    height: 161px; width: 160px; display: flex; justify-content: center; align-items: center;
-    position: relative; z-index: 10;
-    background-image: url('pokemon%20hex2pic 200px.webp') !important;
-    background-size: 150px !important; background-repeat: no-repeat !important; background-position: center center !important;
-}
-.char-image { max-height: 140px; max-width: 140px; width: auto; z-index: 15; transition: filter 0.5s ease;}
-.dead-portrait { filter: grayscale(100%) brightness(75%) !important; }
-
-.progress {
-    position: relative !important; width: 100%; height: 32px !important; 
-    background-image: url('HP%20bar%20200px.webp') !important;
-    background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important;
-    background-color: transparent !important; padding: 4px 8px !important; box-sizing: border-box !important; margin-top: -15px;
-}
-.progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 0px;will-change: width; max-width:105%;}
-.progress-bar.green  { background: #00d412a0 !important; } 
-.progress-bar.yellow { background: #ceb10cc7 !important; } 
-.progress-bar.red    { background: #ff0000a0 !important; } 
-.progress-bar.grey   { background: #646464 !important; }   
-
-.char-name { font-size: 1.5rem; color: rgb(0, 255, 255) !important; text-align: center; margin-top: 8px; filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.6)); }
-.char-pronouns { font-weight: bold; font-size: 0.9rem; color: #afafff !important; text-align: center; margin-top: 2px; }
-.char-player { font-weight: bold; font-size: .8rem; color: #F103BB !important; text-align: center; margin-top: 2px; }
-.hp-text { font-size: 0.9rem; color: white !important; text-align: center; margin-top: -24px; text-shadow: 1px 1px 2px black !important; z-index: 20; }
-.char-slot, .progress { overflow: visible !important; }
-
-.control-panel h3 { margin: 0 0 10px 0; color: cyan; font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 5px;}
-.char-form-block { background: #252533; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 4px solid #e76eff; position: relative;}
-.form-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
-.form-row label { width: 50px; font-size: 0.8rem; color: #ccc; }
-.control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 2px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
-.hp-inputs { display: flex; gap: 5px; width: 100%; }
-.hp-inputs input { width: 50px; }
-.job-container {
-
     display: flex;
-
-    gap: 4px;
-
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    align-items: flex-start;
     width: 100%;
-
-    justify-content: center;
-    align-items: center;
-
-    margin-top: 4px;
 }
 
-.job-bar {
+/* -----------------------
+   CHARACTER CARD
+------------------------ */
 
-    flex: 1;
-
-    min-width: 0;
-
-    height: 20px;
-
-    border-radius: 8px;
-
-    background-image: url('HP bar 200px.webp');
-
-    background-size: cover;
-    background-position: center;
-
-    background-blend-mode: multiply;
-
+.char-slot {
+    width: 140px;
     display: flex;
-
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-
-    font-size: 11px;
-
-  
-
-    font-weight: bold;
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-
+    padding: 0 10px;
 }
 
+/* -----------------------
+   PORTRAIT
+------------------------ */
 
-
+.portrait-area {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px;
+    position: relative;
+}
 
 .char-image {
     max-width: 135px;
     max-height: 135px;
-margin-top:1px;
-    margin-left:1px;
     object-fit: contain;
-
 }
 
+/* -----------------------
+   TEXT FIELDS
+------------------------ */
 
-.global-controls { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #444; display: flex; gap: 5px; }
-.btn { width: 100%; padding: 8px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; font-family: sans-serif; }
-.btn-add { background: #00d412; color: #fff; }
-.btn-add:hover { background: #00b30f; }
-.btn-toggle { background: #44445c; color: #fff; width: auto !important; white-space: nowrap; }
-.btn-toggle:hover { background: #555570; }
-.btn-remove { background: #ff3333; color: #fff; margin-top: 10px; font-size: 0.75rem; padding: 4px; width: 100%; }
-.btn-remove:hover { background: #cc0000; }
+.char-name {
+    font-size: 1.5rem;
+    color: rgb(0, 255, 255) !important;
+    text-align: center;
+    margin-top: 4px;
+    text-shadow:
+        2px 0 2px rgba(0,0,0,0.6),
+        -2px 0 2px rgba(0,0,0,0.6),
+        0 2px 2px rgba(0,0,0,0.6),
+        0 -2px 2px rgba(0,0,0,0.6);
+}
+
+.char-pronouns {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #afafff !important;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.char-player {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #f103bb !important;
+    text-align: center;
+    margin-top: 2px;
+}
+
+/* -----------------------
+   JOBS
+------------------------ */
+
+.job-container {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.job-bar {
+    flex: 1;
+    min-width: 0;
+    height: 20px;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+    font-weight: bold;
+
+    white-space: nowrap;
+    overflow: hidden;
+
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+
+/* -----------------------
+   HP BAR
+------------------------ */
+
+.progress {
+    width: 100%;
+    height: 32px;
+    margin-top: -10px;
+
+    background-image: url('HP%20bar%20200px.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.progress-bar {
+    height: 68%;
+    border-radius: 10px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* colors */
+.progress-bar.green { background: #00d412a0 !important; }
+.progress-bar.yellow { background: #ceb10cc7 !important; }
+.progress-bar.red { background: #ff0000a0 !important; }
+.progress-bar.grey { background: #646464 !important; }
+
+.hp-text {
+    font-size: 0.9rem;
+    color: white !important;
+    text-align: center;
+    margin-top: -22px;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* -----------------------
+   CONTROL PANEL
+------------------------ */
+
+.control-panel h3 {
+    margin: 0 0 10px 0;
+    color: cyan;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.char-form-block {
+    background: #252533;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border-left: 4px solid #e76eff;
+}
+
+.form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    align-items: center;
+}
+
+.form-row label {
+    width: 70px;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.control-panel input,
+.control-panel select {
+    background: #111;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 4px;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+/* -----------------------
+   BUTTONS
+------------------------ */
+
+.global-controls {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed #444;
+    display: flex;
+    gap: 5px;
+}
+
+.btn {
+    width: 100%;
+    padding: 8px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add { background: #00d412; color: white; }
+.btn-toggle { background: #44445c; color: white; width: auto !important; }
+.btn-remove { background: #ff3333; color: white; margin-top: 10px; font-size: 0.75rem; }
