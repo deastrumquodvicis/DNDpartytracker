@@ -211,6 +211,7 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 3; 
+    opacity:70%;
 }
 
 /* Ensure the background color maps cleanly from your JS inline styles */
