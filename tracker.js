@@ -8,13 +8,13 @@ let partyData = [
         name: "Dea",
         current: 30,
         max: 30,
-        portrait: "images/red_mage.png"
+        portrait: "images/placeholder.png"
     },
     {
         name: "Bruh",
         current: 20,
         max: 35,
-        portrait: "images/warrior.png"
+        portrait: "images/placeholder.png"
     }
 ];
 const availablePortraits = [
@@ -191,7 +191,7 @@ function addCharacter() {
         name: "New Hero",
         current: 10,
         max: 10,
-        portrait: availablePortraits[0]
+        portrait: "images/placeholder.png"
     });
 
     buildUI();
