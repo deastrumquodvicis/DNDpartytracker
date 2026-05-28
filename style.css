@@ -49,7 +49,7 @@ body {
     background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important;
     background-color: transparent !important; padding: 4px 8px !important; box-sizing: border-box !important; margin-top: -15px;
 }
-.progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 0px;will-change: width; max-width:100%;}
+.progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 0px;will-change: width; max-width:105%;}
 .progress-bar.green  { background: #00d412a0 !important; } 
 .progress-bar.yellow { background: #ceb10cc7 !important; } 
 .progress-bar.red    { background: #ff0000a0 !important; } 
@@ -57,7 +57,7 @@ body {
 
 .char-name { font-size: 1.5rem; color: rgb(0, 255, 255) !important; text-align: center; margin-top: 8px; filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.6)); }
 .char-pronouns { font-weight: bold; font-size: 0.9rem; color: #afafff !important; text-align: center; margin-top: 2px; }
-.char-player { font-weight: bold; font-size: .8rem; color: #afcbff !important; text-align: center; margin-top: 2px; }
+.char-player { font-weight: bold; font-size: .8rem; color: #F103BB !important; text-align: center; margin-top: 2px; }
 .hp-text { font-size: 0.9rem; color: white !important; text-align: center; margin-top: -24px; text-shadow: 1px 1px 2px black !important; z-index: 20; }
 .char-slot, .progress { overflow: visible !important; }
 
