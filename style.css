@@ -169,15 +169,11 @@ body {
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* ---------------- JOB SYSTEM ---------------- */
-
-/* ---------------- JOB SYSTEM ---------------- */
-
 .job-container {
     display: flex;
-    gap: 0px;            /* Locked to 0 so the pills blend seamlessly inside the master frame */
+    gap: 0px;            
     width: 140px;        
-    height: 22px;        /* Strict vertical lock */
+    height: 22px;        
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
@@ -185,25 +181,30 @@ body {
     
     position: relative;
     border-radius: 10px;
-    overflow: hidden;    /* Clips the inner color blocks perfectly to a pill shape */
+    overflow: hidden;    
+    
+    /* FIX: Gives the whole container a solid dark backdrop so the transparent image edges look crisp */
+    background-color: #111; 
     z-index: 1;
 }
 
-/* MASTER FRAME LAYER 
-   This overlays the inner ring details on top of the dynamic color bars seamlessly */
+/* MASTER FRAME LAYER */
 .job-container::after {
     content: "";
     position: absolute;
     inset: 0;
     background-image: url('HP bar 200px.webp');
-    background-size: 100% 100%; /* Stretches the frame perfectly regardless of 1, 2, or 3 classes */
+    background-size: 100% 100%; 
     background-position: center;
     background-repeat: no-repeat;
-    transform: scaleY(-1);       /* Keeps your vertical flip choice intact */
-    pointer-events: none;        /* Ensures you can still click menus behind it if needed */
-    z-index: 3;                  /* Sits directly on top of the text and colors to frame them */
-    mix-blend-mode: screen;      /* Lets the bright inner rings pop while blending background shadows */
-    opacity: 0.85;
+    transform: scaleY(-1);       
+    pointer-events: none;        
+    
+    /* FIX: Changed blend mode to MULTIPLY. 
+       This treats your image asset as an alpha frame. The dark borders of your image will force 
+       the bright background colors underneath to hide, locking the colors inside the inner ring! */
+    mix-blend-mode: multiply;    
+    z-index: 3;                  
 }
 
 /* INDIVIDUAL JOB PILL */
@@ -221,22 +222,20 @@ body {
     font-weight: bold;
     white-space: nowrap;
     padding: 0 4px;
-    z-index: 1;
+    
+    /* FIX: Inherits the color from JavaScript but controls the text positioning */
+    z-index: 2; 
 }
 
-/* Dynamic Opacity Layer for individual blocks */
+/* This applies the actual background color tint beneath the frame */
+.job-bar {
+    background-color: var(--job-color, inherit); 
+}
+
+/* Let's clear out the unnecessary pseudo elements so they don't break our layers */
+.job-bar::before,
 .job-bar::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: inherit; 
-    opacity: 0.75;               /* Gives the flat color block some transparency */
-    z-index: -1;
-}
-
-/* Remove the old isolated background layers that were clipping */
-.job-bar::before {
-    display: none;
+    display: none !important;
 }
 /* ---------------- FORM PANEL ---------------- */
 
