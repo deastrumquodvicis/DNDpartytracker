@@ -180,7 +180,7 @@ body {
     margin-top: 8px;
     
     position: relative;
-    border-radius: 10px;
+  
     overflow: hidden;   
     z-index: 1;
 }
@@ -206,7 +206,7 @@ body {
     min-width: 0;        
     height: 80%;        
     position: relative;
-    
+      border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
