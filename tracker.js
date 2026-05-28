@@ -1,7 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-const isViewMode = urlParams.get('mode') === 'view';
-
-let saveTimeout = null;
+const isViewMode = urlParams.get("mode") === "view";
 
 let partyData = [
     {
@@ -71,7 +69,7 @@ const availablePortraits = [
 /* ---------------- HELPERS ---------------- */
 
 function getPercent(char) {
-    if (!char.max) return 0;
+    if (!char.max || char.max <= 0) return 0;
     return Math.max(0, Math.min(100, (char.current / char.max) * 100));
 }
 
@@ -82,47 +80,40 @@ function getColor(percent) {
     return "green";
 }
 
-/* ---------------- JOB UI ---------------- */
+/* ---------------- BUILDERS ---------------- */
 
 function buildJobOptions(selected) {
-    let html = "";
-    for (let j of availableJobs) {
-        html += `<option value="${j}" ${j === selected ? "selected" : ""}>${j}</option>`;
-    }
-    return html;
+    return availableJobs
+        .map(j => `<option value="${j}" ${j === selected ? "selected" : ""}>${j}</option>`)
+        .join("");
 }
 
 function buildPortraitOptions(selected) {
-    let html = "";
-    for (let p of availablePortraits) {
-        html += `<option value="${p}" ${p === selected ? "selected" : ""}>${p}</option>`;
-    }
-    return html;
+    return availablePortraits
+        .map(p => `<option value="${p}" ${p === selected ? "selected" : ""}>${p}</option>`)
+        .join("");
 }
 
 function buildJobBars(jobs = []) {
-
     const useAbbr = jobs.length >= 3;
 
     return jobs.map(job => {
-
         const style = jobStyles[job] || { color: "#666666aa", text: "#fff" };
         const label = useAbbr
             ? (jobAbbreviations[job] || job.slice(0,4).toUpperCase())
             : job;
 
         return `
-            <div class="job-bar ${job}" style="--job-color:${style.color}; color:${style.text}">
-                <span>${label}</span>
-            </div>
-        `;
+        <div class="job-bar ${job}"
+            style="background-color:${style.color}; color:${style.text}">
+            ${label}
+        </div>`;
     }).join("");
 }
 
 /* ---------------- RENDER ---------------- */
 
 function buildUI() {
-
     const target = document.getElementById("party-target");
     const forms = document.getElementById("forms-container");
     if (!target) return;
@@ -131,7 +122,6 @@ function buildUI() {
     let editor = "";
 
     partyData.forEach((char, i) => {
-
         const percent = getPercent(char);
         const color = getColor(percent);
 
@@ -152,7 +142,8 @@ function buildUI() {
             <div class="char-player">${char.player}</div>
 
             <div class="progress">
-                <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
+                <div id="pbar-${i}" class="progress-bar ${color}"
+                    style="width:${percent}%"></div>
             </div>
 
             <div id="php-${i}" class="hp-text">
@@ -164,16 +155,26 @@ function buildUI() {
         editor += `
         <div class="char-form-block">
 
-            <input value="${char.name}" oninput="updateField(${i}, 'name', this.value)">
-            <input value="${char.pronouns}" oninput="updateField(${i}, 'pronouns', this.value)">
-            <input value="${char.player}" oninput="updateField(${i}, 'player', this.value)">
+            <input value="${char.name}"
+                oninput="updateField(${i},'name',this.value)">
 
-            <input type="number" value="${char.current}" oninput="updateField(${i}, 'current', this.value)">
-            <input type="number" value="${char.max}" oninput="updateField(${i}, 'max', this.value)">
+            <input value="${char.pronouns}"
+                oninput="updateField(${i},'pronouns',this.value)">
 
-            <select onchange="updateField(${i}, 'portrait', this.value)">
+            <input value="${char.player}"
+                oninput="updateField(${i},'player',this.value)">
+
+            <input type="number" value="${char.current}"
+                oninput="updateField(${i},'current',this.value)">
+
+            <input type="number" value="${char.max}"
+                oninput="updateField(${i},'max',this.value)">
+
+            <select onchange="updateField(${i},'portrait',this.value)">
                 ${buildPortraitOptions(char.portrait)}
             </select>
+
+            <button onclick="removeCharacter(${i})">Remove</button>
 
         </div>`;
     });
@@ -185,9 +186,7 @@ function buildUI() {
 /* ---------------- UPDATE ---------------- */
 
 function updateOverlayOnly() {
-
     partyData.forEach((char, i) => {
-
         const percent = getPercent(char);
         const color = getColor(percent);
 
@@ -206,67 +205,15 @@ function updateOverlayOnly() {
 }
 
 function updateField(i, field, value) {
-
     if (field === "current" || field === "max") {
         value = parseInt(value);
         if (isNaN(value)) value = 0;
     }
 
     partyData[i][field] = value;
-
     updateOverlayOnly();
 }
-for (let j = 0; j < 3; j++) {
 
-    let selectedJob = char.jobs[j] || '';
-
-    formHTML +=
-        '<div class="form-row">' +
-            '<label>Job ' + (j + 1) + '</label>' +
-            '<select onchange="updateJob(' + i + ', ' + j + ', this.value)">' +
-                '<option value="">None</option>' +
-                buildJobOptions(selectedJob) +
-            '</select>' +
-        '</div>';
-}
-formHTML +=
-'<div class="char-form-block">' +
-
-    '<div class="form-row">' +
-        '<label>Name</label>' +
-        '<input value="' + char.name + '" oninput="updateField(' + i + ', \'name\', this.value)">' +
-    '</div>' +
-
-    '<div class="form-row">' +
-        '<label>Pronouns</label>' +
-        '<input value="' + char.pronouns + '" oninput="updateField(' + i + ', \'pronouns\', this.value)">' +
-    '</div>' +
-
-    '<div class="form-row">' +
-        '<label>Player</label>' +
-        '<input value="' + char.player + '" oninput="updateField(' + i + ', \'player\', this.value)">' +
-    '</div>';
-formHTML +=
-    '<div class="form-row">' +
-        '<label>Current HP</label>' +
-        '<input type="number" value="' + char.current + '" oninput="updateField(' + i + ', \'current\', this.value)">' +
-    '</div>' +
-
-    '<div class="form-row">' +
-        '<label>Max HP</label>' +
-        '<input type="number" value="' + char.max + '" oninput="updateField(' + i + ', \'max\', this.value)">' +
-    '</div>' +
-
-    '<div class="form-row">' +
-        '<label>Portrait</label>' +
-        '<select onchange="updateField(' + i + ', \'portrait\', this.value)">' +
-            buildPortraitOptions(char.portrait) +
-        '</select>' +
-    '</div>' +
-
-    '<button onclick="removeCharacter(' + i + ')">Remove</button>' +
-
-'</div>';
 /* ---------------- INIT ---------------- */
 
 window.addEventListener("DOMContentLoaded", buildUI);
