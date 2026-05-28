@@ -158,6 +158,25 @@ function buildPortraitOptions(selected) {
 
     return html;
 }
+function buildJobOptions(selected) {
+
+    let html = '';
+
+    for (let i = 0; i < availableJobs.length; i++) {
+
+        const job = availableJobs[i];
+
+        html += '<option value="' + job + '"';
+
+        if (job === selected) {
+            html += ' selected';
+        }
+
+        html += '>' + job + '</option>';
+    }
+
+    return html;
+}
 function buildJobBars(jobs) {
 
     let html = '';
@@ -217,27 +236,7 @@ function buildUI() {
         const char = partyData[i];
         const percent = getPercent(char);
         const color = getColor(char, percent);
-for (let j = 0; j < 3; j++) {
 
-    let selectedJob = '';
-
-    if (char.jobs[j]) {
-        selectedJob = char.jobs[j];
-    }
-
-    formHTML +=
-        '<div class="form-row">' +
-            '<label>Job ' + (j + 1) + '</label>' +
-
-            '<select onchange="updateJob(' + i + ', ' + j + ', this.value)">' +
-
-                '<option value="">None</option>' +
-
-                buildJobOptions(selectedJob) +
-
-            '</select>' +
-        '</div>';
-}
         overlayHTML +=
             '<div class="char-slot">' +
 
@@ -289,6 +288,27 @@ for (let j = 0; j < 3; j++) {
     '<input value="' + char.player +
     '" oninput="updateField(' + i + ', \'player\', this.value)">' +
 '</div>' +
+            for (let j = 0; j < 3; j++) {
+
+    let selectedJob = '';
+
+    if (char.jobs[j]) {
+        selectedJob = char.jobs[j];
+    }
+
+    formHTML +=
+        '<div class="form-row">' +
+            '<label>Job ' + (j + 1) + '</label>' +
+
+            '<select onchange="updateJob(' + i + ', ' + j + ', this.value)">' +
+
+                '<option value="">None</option>' +
+
+                buildJobOptions(selectedJob) +
+
+            '</select>' +
+        '</div>';
+}
                 '<div class="form-row">' +
                     '<label>Current HP</label>' +
                     '<input type="number" value="' + char.current + '" oninput="updateField(' + i + ', \'current\', this.value)">' +
@@ -372,7 +392,9 @@ function updateJob(charIndex, jobIndex, value) {
     }
 
     if (value === '') {
-        partyData[charIndex].jobs.splice(jobIndex, 1);
+        partyData[charIndex].jobs[jobIndex] = '';
+        partyData[charIndex].jobs =
+    partyData[charIndex].jobs.filter(job => job !== '');
     }
     else {
         partyData[charIndex].jobs[jobIndex] = value;
@@ -384,12 +406,19 @@ function updateJob(charIndex, jobIndex, value) {
    ADD / REMOVE CHARACTERS
 -------------------------- */
 function addCharacter() {
-    partyData.push({
-        name: "New Hero",
-        current: 10,
-        max: 10,
-        portrait: "images/placeholder.png"
-    });
+   partyData.push({
+    name: "New Hero",
+    current: 10,
+    max: 10,
+
+    portrait: "images/placeholder.png",
+
+    pronouns: "they/them",
+
+    player: "Guest",
+
+    jobs: ["fighter"]
+});
 
     buildUI();
 }
