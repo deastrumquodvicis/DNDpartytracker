@@ -170,46 +170,30 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE TRACK CONTROLLER: Outlines the primary canvas boundary */
+/* THE TRACK CONTROLLER: Now just handles the structural layout sizing */
 .job-container {
     display: flex;
-    gap: 0px;            
+    /* Adding a tiny gap gives your split neon pills room to breathe side-by-side */
+    gap: 4px;            
     width: 140px;        
     height: 22px;        
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
     margin-top: 8px;
-    
     position: relative;
-    border-radius: 20px; 
-    overflow: hidden;    
-    
-    /* REMOVED: Black base color deleted so no dark voids leak out */
-    background-color: transparent; 
     z-index: 1;
-}
-
-/* 1. THE BOTTOM BACKPLATE (Unified Base Graphic) */
-.job-container::before {
-    content: "";
-    position: absolute;
-    inset: 0px; 
     
-    background-image: url('HP bar 200px.webp');
-    background-size: 100% 100%; 
-    background-position: center;
-    background-repeat: no-repeat;
-    transform: scaleY(-1);       
-    pointer-events: none;
-    z-index: 1; 
+    /* REMOVED overflow:hidden so the glowing neon edges can expand outside safely! */
+    overflow: visible;    
+    background-color: transparent; 
 }
 
-/* 2. THE FLEX POSITIONER CELL */
+/* THE FLEX POSITIONER CELL */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 100%; /* Keeps layout grid tracking at full size */       
+    height: 100%;        
     position: relative;
     
     display: flex;
@@ -219,27 +203,50 @@ margin-left:1px;
     z-index: 2; 
 }
 
-/* 3. THE ACTUAL PRECISION COLOR LAYER (Middle Sandwich) */
+/* 1. THE PILL NEON BACKPLATE (Bottom of the pill sandwich)
+   By placing this on the job-bar instead of the container, EVERY individual 
+   multiclass pill automatically gets its own perfectly scaled neon border! */
+.job-bar::before {
+    content: "";
+    position: absolute;
+    
+    /* Scales the capsule down to your exact requested size settings */
+    top: 17.5%;      /* Centered vertically: (100 - 65) / 2 */
+    height: 65%;     /* 65% Height */
+    left: 5%;        /* Centered horizontally: (100 - 90) / 2 */
+    width: 90%;      /* 90% Width */
+    
+    background-image: url('HP bar 200px.webp');
+    background-size: 100% 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scaleY(-1); /* Keeps your vertical flip choice */      
+    pointer-events: none;
+    z-index: 1; 
+}
+
+/* 2. THE PILL COLOR CHIP (Middle of the pill sandwich) */
 .job-bar::after {
     content: "";
     position: absolute;
     
-    /* TARGETED FIX: Shrinks the color blocks down to the precise dimensions.
-       Centering formula: (100% - target%) / 2 */
-    top: 17.5%;      /* Centered vertically: (100 - 65) / 2 */
-    height: 65%;     /* Exact requested height */
-    
-    left: 5%;        /* Centered horizontally: (100 - 90) / 2 */
-    width: 90%;      /* Exact requested width */
+    /* Pulls the color edges slightly inset from the neon frame so it fits 
+       inside the capsule perfectly without bleeding over the lines */
+    top: 22%;        
+    height: 56%;     
+    left: 9%;        
+    width: 82%;      
     
     background-color: var(--job-color, inherit); 
     
-    /* Give the inner color pills a soft capsule roundness to match the layout frame */
-    border-radius: 4px; 
-    z-index: -1; 
+    /* Matches the exact curvature of the inner capsule asset channel */
+    border-radius: 10px; 
+    
+    pointer-events: none;
+    z-index: 2; 
 }
 
-/* 4. THE TEXT WRAPPER (Top Layer Surface) */
+/* 3. THE TEXT WRAPPER (Top Layer Surface) */
 .job-text-span {
     position: relative;
     z-index: 10; 
@@ -249,11 +256,6 @@ margin-left:1px;
     color: inherit; 
     white-space: nowrap;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
-}
-
-/* Housekeeping rule to clean up unneeded layers */
-.job-bar::before {
-    display: none !important;
 }
 /* ---------------- FORM PANEL ---------------- */
 
