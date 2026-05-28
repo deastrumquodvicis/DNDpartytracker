@@ -180,7 +180,7 @@ body {
     margin-top: 8px;
     
     position: relative;
-  
+  border-radius: 20px;
     overflow: hidden;   
     z-index: 1;
 }
@@ -202,11 +202,11 @@ body {
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-    flex: 1 1 65%;      
+    flex: 1 1 60%;      
     min-width: 0;        
-    height: 80%;        
+    height: 75%;        
     position: relative;
-      border-radius: 20px;
+      
     display: flex;
     align-items: center;
     justify-content: center;
