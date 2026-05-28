@@ -208,10 +208,13 @@ body {
     inset: 0;
 
     background-image: url('HP bar 200px.webp');
-    /* FIX: Locks vertical size to 22px so Y axis never shrinks; auto lets X axis scale freely */
+    /* Locks vertical size to 22px so Y axis never shrinks; auto lets X axis scale freely */
     background-size: auto 22px; 
     background-position: center;
     background-repeat: no-repeat;
+
+    /* FLIPS THE TEXTURE VERTICALLY */
+    transform: scaleY(-1.3); 
 
     z-index: -2;
 }
