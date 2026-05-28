@@ -170,7 +170,7 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE BOTTOM LAYER BASE: This acts as your container wrapper */
+/* THE TRACK CONTROLLER: Defines the box footprint, shape, and clips the contents */
 .job-container {
     display: flex;
     gap: 0px;            
@@ -182,22 +182,37 @@ margin-left:1px;
     margin-top: 8px;
     
     position: relative;
+    
+    /* Forces the capsule shape across ALL layers inside this container */
+    border-radius: 20px; 
+    overflow: hidden;    
+    background-color: #111; 
     z-index: 1;
+}
+
+/* 1. THE BOTTOM BACKPLATE (Unified Layer)
+   By using a pseudo-element on the parent container, the WebP asset renders 
+   as a single, continuous, unbroken image layer *underneath* all class splits. */
+.job-container::before {
+    content: "";
+    position: absolute;
     
-    /* 1. THE WEBP BACKPLATE (Bottom of the Sandwich)
-       Placing it directly on the container background guarantees it sits 
-       underneath all your job colors. */
+    /* Adjust these bounds outward (e.g., -2px, -4px) if you want the WebP frame 
+       to look larger/glowing outside the clipped color bar boundaries! */
+    inset: 0px; 
+    
     background-image: url('HP bar 200px.webp');
-    
-    /* Adjust these size settings if you want to make the webp image larger/smaller 
-       relative to the container dimensions! (e.g., 100%, 105%, etc.) */
     background-size: 100% 100%; 
     background-position: center;
     background-repeat: no-repeat;
-    transform: scaleY(-1); /* Flips the asset vertically */
+    transform: scaleY(-1); /* Flips the asset vertically as intended */      
+    pointer-events: none;
+    
+    /* Locks it firmly below the colored bars */
+    z-index: 1; 
 }
 
-/* MIDDLE LAYER CONTAINER: Holds individual class colors */
+/* 2. MIDDLE LAYER: Individual Class Blocks */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
@@ -208,50 +223,36 @@ margin-left:1px;
     align-items: center;
     justify-content: center;
     
-    /* We make the parent transparent so it doesn't leak opacity to the text child */
-    background-color: transparent !important; 
+    /* Pulls your transparent 'bb' color strings directly from your JS object definitions */
+    background-color: var(--job-color, inherit); 
+    
+    /* Keeps the bar element fully opaque so your child text node stays bright */
+    opacity: 1; 
+    
+    /* Sits directly above the unified WebP backplate */
     z-index: 2; 
 }
 
-/* 2. THE COLORS WITH BORDER RADIUS (Middle of the Sandwich)
-   By putting the color on a pseudo-element, we can give it a custom border radius 
-   and 70% opacity without affecting the text readability! */
-.job-bar::after {
-    content: "";
-    position: absolute;
-    
-    /* Shrink these inset pixels if you want to pull the colors inward away from the webp glow borders */
-    inset: 1px 2px; 
-    
-    /* Pulls your JavaScript colors dynamically */
-    background-color: var(--job-color, inherit); 
-    
-    /* Adjust this to set how curved the color bar edges are */
-    border-radius: 10px; 
-    
-    /* Applies 70% opacity strictly to the color bars */
-    opacity: 0.7; 
-    z-index: -1; /* Keeps it behind the text span */
-}
-
-/* 3. THE TEXT WRAPPER (Top of the Sandwich) */
+/* 3. THE TEXT WRAPPER (Top Layer) */
 .job-text-span {
     position: relative;
-    z-index: 10; /* Forces text to float completely over the colors and background plate */
     
-    /* Counter-flips the text because the parent container uses scaleY(-1) */
-    transform: scaleY(-1); 
+    /* Pushes text straight to the surface of the container stacking context */
+    z-index: 10; 
     
     font-size: 9px;      
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
+    
+    /* Deep text shadow prevents color blending from washing out typography readability */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
 
-/* Clean up any lingering container overlays */
+/* Clean up any lingering pseudo elements */
 .job-container::after,
-.job-bar::before {
+.job-bar::before,
+.job-bar::after {
     display: none !important;
 }
 /* ---------------- FORM PANEL ---------------- */
