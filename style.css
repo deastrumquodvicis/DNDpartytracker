@@ -186,7 +186,7 @@ margin-left:1px;
     /* Forces the capsule shape across ALL layers inside this container */
     border-radius: 20px; 
     overflow: hidden;    
-    background-color: #111; 
+    background-color: transparent; 
     z-index: 1;
 }
 
@@ -216,8 +216,8 @@ margin-left:1px;
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;    
-    max-width: 90%; 
-    height: 70%;        
+    max-width: 91%; 
+    height: 67%;        
     position: relative;
     
     display: flex;
