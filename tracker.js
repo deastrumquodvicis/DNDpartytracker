@@ -45,7 +45,7 @@ const jobStyles = {
     bloodhunter: { color: "#7E0100dd", text: "white" },
     witch: { color: "#FF40F2dd", text: "white" },
     theurge: { color: "#2CFFF8dd", text: "white" },
-    sidekick: { color: "#2CFFF8dd", text: "white" },
+    sidekick: { color: "#808080dd", text: "white" },
     "⸻": { color: "#808080dd", text: "white" }, /* FIX: Wrapped in quotes */
     wizard: { color: "#1E87E6dd", text: "white" }
 };
