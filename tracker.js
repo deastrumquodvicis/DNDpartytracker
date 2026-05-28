@@ -1,40 +1,40 @@
 const urlParams = new URLSearchParams(window.location.search);
 const isViewMode = urlParams.get('mode') === 'view';
 
+let saveTimeout = null;
+
 let partyData = [
-    {
-        name: "Dea",
-        current: 30,
-        max: 30
-    },
-    {
-        name: "Bruh",
-        current: 20,
-        max: 35
-    }
+    { name: "Dea", current: 30, max: 30 },
+    { name: "Bruh", current: 20, max: 35 }
 ];
+
+function getHpPercent(char) {
+    if (!char.max || char.max <= 0) return 0;
+    return Math.max(0, Math.min(100, (char.current / char.max) * 100));
+}
+
+function getHpColor(percent, current) {
+    if (current <= 0) return "grey";
+    if (percent <= 10) return "red";
+    if (percent <= 50) return "yellow";
+    return "green";
+}
 
 function buildUI() {
 
-    const target = document.getElementById('party-target');
-    const forms = document.getElementById('forms-container');
+    const target = document.getElementById("party-target");
+    const forms = document.getElementById("forms-container");
 
-    let overlayHTML = '';
-    let formHTML = '';
+    if (!target) return;
 
-    for (let index = 0; index < partyData.length; index++) {
+    let overlayHTML = "";
+    let formHTML = "";
 
-        const char = partyData[index];
+    for (let i = 0; i < partyData.length; i++) {
 
-        let percent = 0;
-
-        if (char.max > 0) {
-            percent = (char.current / char.max) * 100;
-        }
-
-        // -------------------------
-        // OVERLAY (STREAM VIEW)
-        // -------------------------
+        const char = partyData[i];
+        const percent = getHpPercent(char);
+        const color = getHpColor(percent, char.current);
 
         overlayHTML +=
             '<div class="char-slot">' +
@@ -44,7 +44,7 @@ function buildUI() {
                 '</div>' +
 
                 '<div class="progress">' +
-                    '<div class="progress-bar green" style="width:' + percent + '%"></div>' +
+                    '<div class="progress-bar ' + color + '" style="width:' + percent + '%"></div>' +
                 '</div>' +
 
                 '<div class="hp-text">' +
@@ -53,61 +53,75 @@ function buildUI() {
 
             '</div>';
 
-        // -------------------------
-        // EDITOR FORM
-        // -------------------------
-
         formHTML +=
             '<div class="char-form-block">' +
 
                 '<div class="form-row">' +
                     '<label>Name</label>' +
-                    '<input value="' + char.name + '" ' +
-                        'oninput="updateField(' + index + ', \'name\', this.value)">' +
+                    '<input value="' + char.name + '" oninput="updateField(' + i + ', \'name\', this.value)">' +
                 '</div>' +
 
                 '<div class="form-row">' +
-                    '<label>HP</label>' +
-                    '<input type="number" value="' + char.current + '" ' +
-                        'oninput="updateField(' + index + ', \'current\', this.value)">' +
+                    '<label>Current HP</label>' +
+                    '<input type="number" value="' + char.current + '" oninput="updateField(' + i + ', \'current\', this.value)">' +
                 '</div>' +
 
                 '<div class="form-row">' +
-                    '<label>Max</label>' +
-                    '<input type="number" value="' + char.max + '" ' +
-                        'oninput="updateField(' + index + ', \'max\', this.value)">' +
+                    '<label>Max HP</label>' +
+                    '<input type="number" value="' + char.max + '" oninput="updateField(' + i + ', \'max\', this.value)">' +
                 '</div>' +
+
+                '<button onclick="removeCharacter(' + i + ')">Remove</button>' +
 
             '</div>';
     }
 
     target.innerHTML = overlayHTML;
 
-    if (!isViewMode) {
+    if (!isViewMode && forms) {
         forms.innerHTML = formHTML;
     }
 }
+
 function updateField(index, field, value) {
 
-    if (field === 'current') {
-        value = parseInt(value) || 0;
+    if (field === "current" || field === "max") {
+        value = parseInt(value);
+        if (isNaN(value)) value = 0;
     }
 
     partyData[index][field] = value;
 
     buildUI();
+
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(function () {
+        console.log("auto-save trigger (optional)");
+        // pushDataToCloud();
+    }, 400);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+function addCharacter() {
+    partyData.push({
+        name: "New Hero",
+        current: 10,
+        max: 10
+    });
 
-    if (isViewMode) {
+    buildUI();
+}
 
-        const controls =
-            document.getElementById('ui-controls');
+function removeCharacter(index) {
+    partyData.splice(index, 1);
+    buildUI();
+}
 
-        if (controls) {
-            controls.classList.add('hidden');
-        }
+window.addEventListener("DOMContentLoaded", function () {
+
+    const controls = document.getElementById("ui-controls");
+
+    if (isViewMode && controls) {
+        controls.classList.add("hidden");
     }
 
     buildUI();
