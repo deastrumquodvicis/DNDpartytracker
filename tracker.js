@@ -8,52 +8,21 @@ let partyData = [
     { name: "Bruh", current: 20, max: 35 }
 ];
 
-function getHpPercent(char) {
+function getPercent(char) {
     if (!char.max || char.max <= 0) return 0;
     return Math.max(0, Math.min(100, (char.current / char.max) * 100));
 }
 
-function getHpColor(percent, current) {
-    if (current <= 0) return "grey";
+function getColor(char, percent) {
+    if (char.current <= 0) return "grey";
     if (percent <= 10) return "red";
     if (percent <= 50) return "yellow";
     return "green";
 }
-function updateOverlayOnly() {
 
-    for (let i = 0; i < partyData.length; i++) {
-
-        const char = partyData[i];
-
-        const percent =
-            char.max > 0
-                ? (char.current / char.max) * 100
-                : 0;
-
-        let color = "green";
-
-        if (char.current <= 0) color = "grey";
-        else if (percent <= 10) color = "red";
-        else if (percent <= 50) color = "yellow";
-
-        const bar = document.querySelector("#pbar-" + i);
-        const hp = document.querySelector("#php-" + i);
-        const name = document.querySelector("#pname-" + i);
-
-        if (bar) {
-            bar.style.width = percent + "%";
-            bar.className = "progress-bar " + color;
-        }
-
-        if (hp) {
-            hp.textContent = char.current + " / " + char.max;
-        }
-
-        if (name) {
-            name.textContent = char.name;
-        }
-    }
-}
+/* -------------------------
+   INITIAL BUILD (FULL RENDER)
+-------------------------- */
 function buildUI() {
 
     const target = document.getElementById("party-target");
@@ -67,8 +36,8 @@ function buildUI() {
     for (let i = 0; i < partyData.length; i++) {
 
         const char = partyData[i];
-        const percent = getHpPercent(char);
-        const color = getHpColor(percent, char.current);
+        const percent = getPercent(char);
+        const color = getColor(char, percent);
 
         overlayHTML +=
             '<div class="char-slot">' +
@@ -78,10 +47,11 @@ function buildUI() {
                 '</div>' +
 
                 '<div class="progress">' +
-                    '<div class="progress-bar ' + color + '" style="width:' + percent + '%"></div>' +
+                    '<div id="pbar-' + i + '" class="progress-bar ' + color +
+                    '" style="width:' + percent + '%"></div>' +
                 '</div>' +
 
-                '<div class="hp-text">' +
+                '<div id="php-' + i + '" class="hp-text">' +
                     char.current + ' / ' + char.max +
                 '</div>' +
 
@@ -117,6 +87,35 @@ function buildUI() {
     }
 }
 
+/* -------------------------
+   FAST OVERLAY UPDATE ONLY
+-------------------------- */
+function updateOverlayOnly() {
+
+    for (let i = 0; i < partyData.length; i++) {
+
+        const char = partyData[i];
+
+        const percent = getPercent(char);
+        const color = getColor(char, percent);
+
+        const bar = document.getElementById("pbar-" + i);
+        const hp = document.getElementById("php-" + i);
+
+        if (bar) {
+            bar.style.width = percent + "%";
+            bar.className = "progress-bar " + color;
+        }
+
+        if (hp) {
+            hp.textContent = char.current + " / " + char.max;
+        }
+    }
+}
+
+/* -------------------------
+   FIELD UPDATE (NO FULL RERENDER)
+-------------------------- */
 function updateField(index, field, value) {
 
     if (field === "current" || field === "max") {
@@ -126,15 +125,17 @@ function updateField(index, field, value) {
 
     partyData[index][field] = value;
 
-    // ONLY update overlay (NOT full rebuild)
     updateOverlayOnly();
 
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(function () {
-        console.log("auto-save trigger (optional)");
+        console.log("auto-save (optional)");
     }, 400);
 }
 
+/* -------------------------
+   ADD / REMOVE CHARACTERS
+-------------------------- */
 function addCharacter() {
     partyData.push({
         name: "New Hero",
@@ -150,6 +151,9 @@ function removeCharacter(index) {
     buildUI();
 }
 
+/* -------------------------
+   INIT
+-------------------------- */
 window.addEventListener("DOMContentLoaded", function () {
 
     const controls = document.getElementById("ui-controls");
