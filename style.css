@@ -204,7 +204,7 @@ body {
 .job-bar {
     flex: 1 1 60%;      
     min-width: 0;        
-    height: 75%;        
+    height: 70%;        
     position: relative;
       
     display: flex;
@@ -212,6 +212,7 @@ body {
     justify-content: center;
     z-index: 3; 
     opacity:70%;
+    padding: 0 4px;
 }
 
 /* Ensure the background color maps cleanly from your JS inline styles */
