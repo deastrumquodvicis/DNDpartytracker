@@ -144,8 +144,7 @@ function buildJobBars(jobs = []) {
             : (jobFullLabels[job] || job);
 
         return `
-        <div class="job-bar ${job}"
-            style="background-color:${style.color}; color:${style.text}">
+        <div class="job-bar ${job}" style="--job-color:${style.color}; color:${style.text}">
             <span class="job-text-span">${label}</span>
         </div>`;
     }).join("");
