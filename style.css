@@ -197,21 +197,21 @@ body {
     background-repeat: no-repeat;
     transform: scaleY(-1);       
     pointer-events: none;        
-    mix-blend-mode: multiply;    
+     
     z-index: 2; /* Sits over the background colors, but UNDER the text span */
 }
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-    flex: 1 1 90%;      
+    flex: 1 1 75%;      
     min-width: 0;        
-    height: 90%;        
+    height: 80%;        
     position: relative;
     
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1; 
+    z-index: 3; 
 }
 
 /* Ensure the background color maps cleanly from your JS inline styles */
