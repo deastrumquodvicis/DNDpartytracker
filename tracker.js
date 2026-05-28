@@ -46,7 +46,7 @@ const jobStyles = {
     witch: { color: "#FF40F2dd", text: "white" },
     theurge: { color: "#2CFFF8dd", text: "white" },
     sidekick: { color: "#2CFFF8dd", text: "white" },
-     ⸻: { color: "#808080dd", text: "white" },
+    "⸻": { color: "#808080dd", text: "white" }, /* FIX: Wrapped in quotes */
     wizard: { color: "#1E87E6dd", text: "white" }
 };
 
@@ -67,7 +67,7 @@ const jobFullLabels = {
     sorcerer: "Sorcerer",
     theurge: "Theurge",
     sidekick: "Sidekick",
-    ⸻: "⸻",
+    "⸻": "⸻", /* FIX: Wrapped in quotes */
     warlock: "Warlock",
     witch: "Witch",
     wizard: "Wizard"
@@ -92,7 +92,7 @@ const jobAbbreviations = {
     warlock: "WRLK",
     witch: "WTCH",
     sidekick: "SIDE",
-    ⸻: "⸺",
+    "⸻": "⸺", /* FIX: Wrapped in quotes */
     wizard: "WZRD"
 };
 
@@ -172,9 +172,9 @@ function buildUI() {
                 <img id="pimg-${i}" class="char-image" src="${char.portrait}">
             </div>
 
-            <div class="char-name">${char.name}</div>
+            <div class="char-name" id="pname-${i}">${char.name}</div>
 
-            <div class="char-pronouns">${char.pronouns}</div>
+            <div class="char-pronouns" id="ppronouns-${i}">${char.pronouns}</div>
 
             <div class="progress">
                 <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
@@ -185,11 +185,10 @@ function buildUI() {
                 ${buildJobBars(char.jobs)}
             </div>
 
-            <div class="char-player">${char.player}</div>
+            <div class="char-player" id="pplayer-${i}">${char.player}</div>
 
         </div>`;
 
-        // Pull the character's jobs, filling empty slots up to 3 with empty strings
         const charJobs = [...char.jobs];
         while (charJobs.length < 3) {
             charJobs.push(""); 
@@ -254,7 +253,6 @@ function buildUI() {
     if (!isViewMode && forms) {
         forms.innerHTML = editor;
         
-        // Append the setup for the "+ Add New Character" button at the bottom of the editor list
         const addButtonHtml = `
             <div style="padding: 10px 0;">
                 <button onclick="addCharacter()" style="background: #e76eff; color: #111; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-family: 'Aldrich', sans-serif; cursor: pointer; width: 100%; font-size: 0.9rem;">
@@ -276,6 +274,10 @@ function updateOverlayOnly() {
         const bar = document.getElementById("pbar-" + i);
         const hp = document.getElementById("php-" + i);
         const img = document.getElementById("pimg-" + i);
+        
+        const nameEl = document.getElementById("pname-" + i);
+        const pronounEl = document.getElementById("ppronouns-" + i);
+        const playerEl = document.getElementById("pplayer-" + i);
 
         if (bar) {
             bar.style.width = percent + "%";
@@ -284,6 +286,10 @@ function updateOverlayOnly() {
 
         if (hp) hp.textContent = `${char.current} / ${char.max}`;
         if (img) img.src = char.portrait;
+        
+        if (nameEl) nameEl.textContent = char.name;
+        if (pronounEl) pronounEl.textContent = char.pronouns;
+        if (playerEl) playerEl.textContent = char.player;
     });
 }
 
