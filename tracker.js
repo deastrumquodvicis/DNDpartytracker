@@ -152,30 +152,56 @@ function buildUI() {
 
         </div>`;
 
-        editor += `
+      editor += `
         <div class="char-form-block">
+            <h3>Character: ${char.name || 'New'}</h3>
+            
+            <div class="form-row">
+                <label>Name</label>
+                <input value="${char.name}" oninput="updateField(${i},'name',this.value)">
+            </div>
 
-            <input value="${char.name}"
-                oninput="updateField(${i},'name',this.value)">
+            <div class="form-row">
+                <label>Pronouns</label>
+                <input value="${char.pronouns}" oninput="updateField(${i},'pronouns',this.value)">
+            </div>
 
-            <input value="${char.pronouns}"
-                oninput="updateField(${i},'pronouns',this.value)">
+            <div class="form-row">
+                <label>Player</label>
+                <input value="${char.player}" oninput="updateField(${i},'player',this.value)">
+            </div>
 
-            <input value="${char.player}"
-                oninput="updateField(${i},'player',this.value)">
+            <div class="form-row">
+                <label>HP Current</label>
+                <input type="number" value="${char.current}" oninput="updateField(${i},'current',this.value)">
+            </div>
 
-            <input type="number" value="${char.current}"
-                oninput="updateField(${i},'current',this.value)">
+            <div class="form-row">
+                <label>HP Max</label>
+                <input type="number" value="${char.max}" oninput="updateField(${i},'max',this.value)">
+            </div>
 
-            <input type="number" value="${char.max}"
-                oninput="updateField(${i},'max',this.value)">
+            <div class="form-row">
+                <label>Portrait</label>
+                <select onchange="updateField(${i},'portrait',this.value)">
+                    ${buildPortraitOptions(char.portrait)}
+                </select>
+            </div>
 
-            <select onchange="updateField(${i},'portrait',this.value)">
-                ${buildPortraitOptions(char.portrait)}
-            </select>
+            <div class="form-row">
+                <label>Jobs</label>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
+                    ${char.jobs.map((currentJob, jobIndex) => `
+                        <select onchange="updateJob(${i}, ${jobIndex}, this.value)">
+                            ${buildJobOptions(currentJob)}
+                        </select>
+                    `).join('')}
+                </div>
+            </div>
 
-            <button onclick="removeCharacter(${i})">Remove</button>
-
+            <div class="form-row" style="margin-top: 10px;">
+                <button onclick="removeCharacter(${i})" style="background: #922b21; color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; width: 100%;">Remove</button>
+            </div>
         </div>`;
     });
 
@@ -213,7 +239,10 @@ function updateField(i, field, value) {
     partyData[i][field] = value;
     updateOverlayOnly();
 }
-
+function updateJob(charIndex, jobIndex, newJobValue) {
+    partyData[charIndex].jobs[jobIndex] = newJobValue;
+    buildUI(); // Rebuild UI completely to update the job bar visual colors and labels
+}
 /* ---------------- INIT ---------------- */
 
 window.addEventListener("DOMContentLoaded", buildUI);
