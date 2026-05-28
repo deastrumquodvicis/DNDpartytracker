@@ -95,36 +95,30 @@ function updateVisualsOnly() {
             }
         }
         
-        var imgElem = document.getElementById('stream-img-' + index);
+     var imgElem = document.getElementById('stream-img-' + index);
         if (imgElem) {
             imgElem.src = char.portrait; imgElem.style.display = 'block';
             if (char.current <= 0) { imgElem.className = 'char-image dead-portrait'; } else { imgElem.className = 'char-image'; }
         }
-        
         var uiTitle = document.getElementById('ui-title-' + index);
         if (uiTitle) uiTitle.innerText = 'Slot ' + (index + 1) + ': ' + (char.name || 'Unnamed');
     });
 }
-
 var saveTimeout = null;
 function updateField(index, field, value) {
     if (field === 'current' || field === 'max') { partyData[index][field] = parseInt(value) || 0; } else { partyData[index][field] = value; }
     updateVisualsOnly();
     if (!isViewMode) { clearTimeout(saveTimeout); saveTimeout = setTimeout(pushDataToCloud, 400); }
 }
-
 function addNewCharacter() {
     partyData.push({ name: "New Hero", current: 10, max: 10, pronouns: "they/them", class1: "fighter", class2: "none", player: "Guest", portrait: "warrior.png" });
     initialBuild();
     if (!isViewMode) pushDataToCloud();
 }
-
 function removeCharacter(index) {
     if (confirm("Are you sure you want to delete this slot?")) { partyData.splice(index, 1); initialBuild(); if (!isViewMode) pushDataToCloud(); }
 }
-
 function toggleOverlayArea() { var panel = document.getElementById('ui-controls'); if (panel) { panel.classList.toggle('hidden'); } }
-
 function pushDataToCloud() {
     var xhr = new XMLHttpRequest();
     xhr.open('PUT', 'https://jsonbin.io' + BIN_ID, true);
@@ -132,7 +126,6 @@ function pushDataToCloud() {
     xhr.setRequestHeader('X-Master-Key', MASTER_KEY);
     xhr.send(JSON.stringify({ party: partyData }));
 }
-
 function loadDataFromCloud(isInitial) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://jsonbin.io' + BIN_ID + '/latest', true);
@@ -153,6 +146,5 @@ function loadDataFromCloud(isInitial) {
     };
     xhr.send();
 }
-
 if (isViewMode) { setInterval(function() { loadDataFromCloud(false); }, 1500); }
 loadDataFromCloud(true);
