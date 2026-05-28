@@ -37,7 +37,26 @@ function getColor(char, percent) {
     if (percent <= 50) return "yellow";
     return "green";
 }
+function buildPortraitOptions(selected) {
 
+    let html = '';
+
+    for (let i = 0; i < availablePortraits.length; i++) {
+
+        const portrait = availablePortraits[i];
+
+        html +=
+            '<option value="' + portrait + '"';
+
+        if (portrait === selected) {
+            html += ' selected';
+        }
+
+        html += '>' + portrait + '</option>';
+    }
+
+    return html;
+}
 /* -------------------------
    INITIAL BUILD (FULL RENDER)
 -------------------------- */
@@ -60,9 +79,13 @@ function buildUI() {
         overlayHTML +=
             '<div class="char-slot">' +
 
-                '<div class="char-name">' +
-                    char.name +
-                '</div>' +
+               '<div class="portrait-area">' +
+    '<img class="char-image" src="' + char.portrait + '">' +
+'</div>' +
+
+'<div class="char-name">' +
+    char.name +
+'</div>' +
 
                 '<div class="progress">' +
                     '<div id="pbar-' + i + '" class="progress-bar ' + color +
@@ -92,7 +115,12 @@ function buildUI() {
                     '<label>Max HP</label>' +
                     '<input type="number" value="' + char.max + '" oninput="updateField(' + i + ', \'max\', this.value)">' +
                 '</div>' +
-
+'<div class="form-row">' +
+    '<label>Portrait</label>' +
+    '<select onchange="updateField(' + i + ', \'portrait\', this.value)">' +
+        buildPortraitOptions(char.portrait) +
+    '</select>' +
+'</div>' +
                 '<button onclick="removeCharacter(' + i + ')">Remove</button>' +
 
             '</div>';
