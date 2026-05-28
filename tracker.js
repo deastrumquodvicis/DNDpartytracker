@@ -28,26 +28,26 @@ const availableJobs = [
 ];
 
 const jobStyles = {
-    barbarian: { color: "#F4641Cdd", text: "white" },
-    bard: { color: "#F9B8E6dd", text: "black" },
-    cleric: { color: "#BFBFBFdd", text: "black" },
-    druid: { color: "#31B32Bdd", text: "white" },
-    fighter: { color: "#753E1Ddd", text: "white" },
-    monk: { color: "#FFEB93dd", text: "black" },
-    paladin: { color: "#f7dc6fdd", text: "black" },
-    ranger: { color: "#376A0Edd", text: "white" },
-    rogue: { color: "#080808dd", text: "white" },
-    sorcerer: { color: "#D91A1Add", text: "white" },
-    warlock: { color: "#8629B3dd", text: "white" },
-    artificer: { color: "#B69A1Add", text: "white" },
-    pugilist: { color: "#21B09Bdd", text: "black" },
-    gunslinger: { color: "#C79C7Fdd", text: "white" },
-    bloodhunter: { color: "#7E0100dd", text: "white" },
-    witch: { color: "#FF40F2dd", text: "white" },
-    theurge: { color: "#2CFFF8dd", text: "white" },
-    sidekick: { color: "#808080dd", text: "white" },
+    barbarian: { color: "#F4641Cbb", text: "white" },
+    bard: { color: "#F9B8E6bb", text: "black" },
+    cleric: { color: "#BFBFBFbb", text: "black" },
+    druid: { color: "#31B32Bbb", text: "white" },
+    fighter: { color: "#753E1Dbb", text: "white" },
+    monk: { color: "#FFEB93bb", text: "black" },
+    paladin: { color: "#f7dc6fbb", text: "black" },
+    ranger: { color: "#376A0Ebb", text: "white" },
+    rogue: { color: "#080808bb", text: "white" },
+    sorcerer: { color: "#D91A1Abb", text: "white" },
+    warlock: { color: "#8629B3bb", text: "white" },
+    artificer: { color: "#B69A1Abb", text: "white" },
+    pugilist: { color: "#21B09Bbb", text: "black" },
+    gunslinger: { color: "#C79C7Fbb", text: "white" },
+    bloodhunter: { color: "#7E0100bb", text: "white" },
+    witch: { color: "#FF40F2bb", text: "white" },
+    theurge: { color: "#2CFFF8bb", text: "white" },
+    sidekick: { color: "#808080bb", text: "white" },
     "⸻": { color: "#808080dd", text: "white" }, /* FIX: Wrapped in quotes */
-    wizard: { color: "#1E87E6dd", text: "white" }
+    wizard: { color: "#1E87E6bb", text: "white" }
 };
 
 const jobFullLabels = {
