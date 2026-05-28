@@ -4,8 +4,26 @@ const isViewMode = urlParams.get('mode') === 'view';
 let saveTimeout = null;
 
 let partyData = [
-    { name: "Dea", current: 30, max: 30 },
-    { name: "Bruh", current: 20, max: 35 }
+    {
+        name: "Dea",
+        current: 30,
+        max: 30,
+        portrait: "images/red_mage.png"
+    },
+    {
+        name: "Bruh",
+        current: 20,
+        max: 35,
+        portrait: "images/warrior.png"
+    }
+];
+const availablePortraits = [
+    "images/ayame.png",
+    "images/dannika.png",
+    "images/klofna_f.png",
+     "images/klofna_m.png",
+    "images/purple.png",
+    "images/shaktal.png"
 ];
 
 function getPercent(char) {
