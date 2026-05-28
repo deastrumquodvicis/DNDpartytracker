@@ -106,7 +106,7 @@ body {
 
     font-size: 11px;
 
-    text-transform: uppercase;
+  
 
     font-weight: bold;
 
@@ -114,45 +114,11 @@ body {
 
     white-space: nowrap;
 
-    text-shadow:
-        1px 1px 2px rgba(0,0,0,0.7);
-}
-.job-bar.fighter {
-    background-color: #c0392baa;
+
 }
 
-.job-bar.wizard {
-    background-color: #7d3c98aa;
-}
 
-.job-bar.cleric {
-    background-color: #d4ac0daa;
-}
 
-.job-bar.rogue {
-    background-color: #1f618daa;
-}
-
-.job-bar.bard {
-    background-color: #16a085aa;
-}
-.class-bars-container { display: flex; gap: 4px; justify-content: center; align-items: center; width: 100%; margin-top: 5px; min-height: 20px;}
-.class-type-bar {
-    display: inline-flex; align-items: center; justify-content: center; flex: 1; height: 20px;
-    background-size: 100% 100% !important; background-repeat: no-repeat !important; background-position: center !important;
-    font-family: 'Aldrich', sans-serif; font-size: 10px; font-weight: bold;
-    text-shadow: 1px 1px 2px #000; text-transform: none; will-change: background-image;
-}
-.portrait-area {
-    width: 140px;
-    height: 140px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-bottom: 8px;
-}
 
 .char-image {
     max-width: 135px;
@@ -162,13 +128,7 @@ margin-top:1px;
     object-fit: contain;
 
 }
-.class-bar-none { display: none !important; }
-.class-bar-barbarian { background-image: url('HP bar 200px.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-.class-bar-fighter { background-image: url('type fighter.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-.class-bar-wizard { background-image: url('type wizard.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-.class-bar-cleric { background-image: url('HP bar 200px.webp') !important; color: #222222 !important; text-shadow: none !important; }
-.class-bar-bard { background-image: url('HP bar 200px.webp') !important; color: #111111 !important; text-shadow: none !important; }
-.class-bar-bug { background-image: url('type bug.webp') !important; color: #000000 !important; text-shadow: 0px 0px 5px black !important; }
+
 
 .global-controls { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #444; display: flex; gap: 5px; }
 .btn { width: 100%; padding: 8px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; font-family: sans-serif; }
