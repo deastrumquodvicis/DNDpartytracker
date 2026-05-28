@@ -36,7 +36,7 @@ const jobStyles = {
     monk: { color: "#93BEFFbb", text: "black" },
     paladin: { color: "#f7dc6fbb", text: "black" },
     ranger: { color: "#376A0Ebb", text: "white" },
-    rogue: { color: "#080808bb", text: "white" },
+    rogue: { color: "#08080888", text: "white" },
     sorcerer: { color: "#D91A1Abb", text: "white" },
     warlock: { color: "#8629B3bb", text: "white" },
     artificer: { color: "#B69A1Abb", text: "white" },
