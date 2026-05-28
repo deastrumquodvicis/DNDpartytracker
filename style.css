@@ -169,33 +169,36 @@ body {
 
 /* ---------------- JOB SYSTEM ---------------- */
 
+/* ---------------- JOB SYSTEM ---------------- */
+
 .job-container {
     display: flex;
     gap: 4px;
-    width: 100%;
+    width: 140px; /* Locks container to the exact width of the character slot */
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
+    margin-top: 8px;
 }
 
 /* MAIN JOB BAR */
-/* MAIN JOB BAR */
 .job-bar {
-    flex: 1 1 0px; /* Forces equal distribution horizontally */
-    width: 0;      /* Prevents text length from making one class bigger than the other */
-    min-width: 55px;
-    height: 22px;
-    border-radius: 8px;
+    flex: 1 1 0px;       /* Forces perfectly equal width sharing between 1, 2, or 3 items */
+    min-width: 0;        /* Overrides default text widths to prevent layout breaking */
+    height: 22px;        /* Strict vertical lock */
+    border-radius: 6px;
     position: relative;
     overflow: hidden;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
+
+    font-size: 9px;      /* Slightly smaller font to accommodate 3 blocks cleanly */
     font-weight: bold;
     white-space: nowrap;
-    padding: 0 4px;
-    z-index: 1; /* Establishes a stacking context */
+    padding: 0 2px;
+    z-index: 1;
 }
 
 /* background texture layer */
@@ -203,11 +206,14 @@ body {
     content: "";
     position: absolute;
     inset: 0;
+
     background-image: url('HP bar 200px.webp');
-    background-size: 100% 100%; /* Forces the texture to match the exact dimensions of the pill stretched flat */
+    /* FIX: Locks vertical size to 22px so Y axis never shrinks; auto lets X axis scale freely */
+    background-size: auto 22px; 
     background-position: center;
     background-repeat: no-repeat;
-    z-index: -2; /* Sends texture to the very back */
+
+    z-index: -2;
 }
 
 /* tint layer */
@@ -215,18 +221,15 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background-color: inherit; /* Inherits the background color injected by your JS style script */
+    background-color: inherit; 
     opacity: 0.65;
-    z-index: -1; /* Sits directly over the texture but underneath the text span */
+    z-index: -1;
 }
-
-
 
 .job-bar span {
     position: relative;
     z-index: 2;
 }
-
 /* ---------------- FORM PANEL ---------------- */
 
 .control-panel h3 {
