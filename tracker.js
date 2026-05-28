@@ -92,12 +92,12 @@ function updateField(index, field, value) {
 
     partyData[index][field] = value;
 
-    buildUI();
+    // ONLY update overlay (NOT full rebuild)
+    updateOverlayOnly();
 
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(function () {
         console.log("auto-save trigger (optional)");
-        // pushDataToCloud();
     }, 400);
 }
 
