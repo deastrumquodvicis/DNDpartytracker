@@ -80,7 +80,7 @@ function buildUI() {
             '<div class="char-slot">' +
 
                '<div class="portrait-area">' +
-    '<img class="char-image" src="' + char.portrait + '">' +
+    '<img id="pimg-' + i + '" class="char-image" src="' + char.portrait + '">' +
 '</div>' +
 
 '<div class="char-name">' +
@@ -147,6 +147,7 @@ function updateOverlayOnly() {
 
         const bar = document.getElementById("pbar-" + i);
         const hp = document.getElementById("php-" + i);
+        const img = document.getElementById("pimg-" + i);
 
         if (bar) {
             bar.style.width = percent + "%";
@@ -156,9 +157,12 @@ function updateOverlayOnly() {
         if (hp) {
             hp.textContent = char.current + " / " + char.max;
         }
+
+        if (img) {
+            img.src = char.portrait;
+        }
     }
 }
-
 /* -------------------------
    FIELD UPDATE (NO FULL RERENDER)
 -------------------------- */
@@ -186,7 +190,8 @@ function addCharacter() {
     partyData.push({
         name: "New Hero",
         current: 10,
-        max: 10
+        max: 10,
+        portrait: availablePortraits[0]
     });
 
     buildUI();
