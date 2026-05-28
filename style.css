@@ -222,7 +222,7 @@ margin-left:1px;
     pointer-events: none;        
     
     /* Sits on top of the background colors, but beneath the text wrapper layer */
-    z-index: 3; 
+    z-index: 1; 
 }
 
 /* THE TEXT WRAPPER: Safely floats on the very surface of your capsule element stack */
