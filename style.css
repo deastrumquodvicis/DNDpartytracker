@@ -169,7 +169,7 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE OUTER FRAME: Controls the size and holds your custom border image asset */
+/* THE BACKGROUND BASE LAYER: This acts as your container and handles the colors */
 .job-container {
     display: flex;
     gap: 0px;            
@@ -181,35 +181,15 @@ margin-left:1px;
     margin-top: 8px;
     
     position: relative;
-    
-    /* Perfect capsule corner rounding */
-    border-radius: 12px; 
+    border-radius: 20px;
     overflow: hidden;    
+    
+    /* The dark background color that peeks through your transparent job colors */
     background-color: #111; 
     z-index: 1;
 }
 
-/* THE BACKGROUND BORDER IMAGE OVERLAY */
-.job-container::after {
-    content: "";
-    position: absolute;
-    
-    /* Adjust this inset if you want the border frame to look larger/smaller 
-       relative to the internal color bars! (e.g., 0px, -2px, etc.) */
-    inset: 0px; 
-    
-    background-image: url('HP bar 200px.webp');
-    background-size: 100% 100%; 
-    background-position: center;
-    background-repeat: no-repeat;
-    transform: scaleY(-1); /* Flips it as intended */      
-    pointer-events: none;        
-    
-    /* Sits directly ABOVE the transparent color pills, but UNDER the text labels */
-    z-index: 5; 
-}
-
-/* INDIVIDUAL JOB COLOR BAR */
+/* INDIVIDUAL JOB PILL: This renders the color fields */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
@@ -219,25 +199,42 @@ margin-left:1px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2; 
     
-    /* Clean, flat color presentation */
+    /* Pulls your transparent 'dd' colors from JavaScript inline styles */
     background-color: var(--job-color, inherit); 
     
-    /* Sets ONLY the background color bars to 70% opacity */
-    opacity: 0.7; 
+    /* Keep opacity at 1 so child text layers don't inherit transparency glitches! */
+    opacity: 1; 
+    z-index: 2; 
 }
 
-/* THE TEXT WRAPPER: Renders 100% solid and crisp above the background graphic layer */
+/* THE BORDER FRAME OVERLAY: Sits directly over your colors, but leaves the text completely alone */
+.job-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    
+    background-image: url('HP bar 200px.webp');
+    background-size: 100% 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scaleY(-1); /* Flips the asset vertically */      
+    pointer-events: none;        
+    
+    /* Sits on top of the background colors, but beneath the text wrapper layer */
+    z-index: 3; 
+}
+
+/* THE TEXT WRAPPER: Safely floats on the very surface of your capsule element stack */
 .job-text-span {
     position: relative;
     
-    /* Crucial layer alignment: Hovers cleanly on top of the container's ::after border asset */
+    /* Pushes the text layer above the ::after asset frame border! */
     z-index: 10; 
     
     font-size: 9px;      
     font-weight: bold;
-    color: inherit; 
+    color: inherit; /* Pulls text color cleanly from your jobStyles object */
     white-space: nowrap;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
