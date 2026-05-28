@@ -49,7 +49,7 @@ body {
     background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important;
     background-color: transparent !important; padding: 4px 8px !important; box-sizing: border-box !important; margin-top: -15px;
 }
-.progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 0px; will-change: width; }
+.progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 0px;  margin-right: 0px;will-change: width; }
 .progress-bar.green  { background: #00d412a0 !important; } 
 .progress-bar.yellow { background: #ceb10cc7 !important; } 
 .progress-bar.red    { background: #ff0000a0 !important; } 
@@ -88,8 +88,8 @@ body {
 }
 
 .char-image {
-    max-width: 135px;
-    max-height: 135px;
+    max-width: 133px;
+    max-height: 133px;
 
     object-fit: contain;
 
