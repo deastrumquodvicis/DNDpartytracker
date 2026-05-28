@@ -46,7 +46,7 @@ const jobStyles = {
     witch: { color: "#FF40F2bb", text: "white" },
     theurge: { color: "#2CFFF8bb", text: "white" },
     sidekick: { color: "#808080bb", text: "white" },
-    "⸻": { color: "#808080dd", text: "white" }, /* FIX: Wrapped in quotes */
+    "⸻": { color: "#808080dd", text: "white" },
     wizard: { color: "#1E87E6bb", text: "white" }
 };
 
@@ -67,7 +67,7 @@ const jobFullLabels = {
     sorcerer: "Sorcerer",
     theurge: "Theurge",
     sidekick: "Sidekick",
-    "⸻": "⸻", /* FIX: Wrapped in quotes */
+    "⸻": "⸻",
     warlock: "Warlock",
     witch: "Witch",
     wizard: "Wizard"
@@ -92,7 +92,7 @@ const jobAbbreviations = {
     warlock: "WRLK",
     witch: "WTCH",
     sidekick: "SIDE",
-    "⸻": "⸺", /* FIX: Wrapped in quotes */
+    "⸻": "⸺",
     wizard: "WZRD"
 };
 
@@ -164,11 +164,14 @@ function buildUI() {
         const percent = getPercent(char);
         const color = getColor(percent);
 
+        // Dynamic status verification during compilation template loop
+        const isDeadClass = char.current <= 0 ? "dead-portrait" : "";
+
        overlay += `
         <div class="char-slot">
 
             <div class="portrait-area">
-                <img id="pimg-${i}" class="char-image" src="${char.portrait}">
+                <img id="pimg-${i}" class="char-image ${isDeadClass}" src="${char.portrait}">
             </div>
 
             <div class="char-name" id="pname-${i}">${char.name}</div>
@@ -284,7 +287,18 @@ function updateOverlayOnly() {
         }
 
         if (hp) hp.textContent = `${char.current} / ${char.max}`;
-        if (img) img.src = char.portrait;
+        
+        if (img) {
+            img.src = char.portrait;
+            
+            /* FIXED: Live check to apply or remove the greyscale effect 
+               the exact moment HP hits 0 or goes back up in the panel! */
+            if (char.current <= 0) {
+                img.classList.add("dead-portrait");
+            } else {
+                img.classList.remove("dead-portrait");
+            }
+        }
         
         if (nameEl) nameEl.textContent = char.name;
         if (pronounEl) pronounEl.textContent = char.pronouns;
