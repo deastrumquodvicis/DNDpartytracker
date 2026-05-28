@@ -216,7 +216,57 @@ function updateField(i, field, value) {
 
     updateOverlayOnly();
 }
+for (let j = 0; j < 3; j++) {
 
+    let selectedJob = char.jobs[j] || '';
+
+    formHTML +=
+        '<div class="form-row">' +
+            '<label>Job ' + (j + 1) + '</label>' +
+            '<select onchange="updateJob(' + i + ', ' + j + ', this.value)">' +
+                '<option value="">None</option>' +
+                buildJobOptions(selectedJob) +
+            '</select>' +
+        '</div>';
+}
+formHTML +=
+'<div class="char-form-block">' +
+
+    '<div class="form-row">' +
+        '<label>Name</label>' +
+        '<input value="' + char.name + '" oninput="updateField(' + i + ', \'name\', this.value)">' +
+    '</div>' +
+
+    '<div class="form-row">' +
+        '<label>Pronouns</label>' +
+        '<input value="' + char.pronouns + '" oninput="updateField(' + i + ', \'pronouns\', this.value)">' +
+    '</div>' +
+
+    '<div class="form-row">' +
+        '<label>Player</label>' +
+        '<input value="' + char.player + '" oninput="updateField(' + i + ', \'player\', this.value)">' +
+    '</div>';
+formHTML +=
+    '<div class="form-row">' +
+        '<label>Current HP</label>' +
+        '<input type="number" value="' + char.current + '" oninput="updateField(' + i + ', \'current\', this.value)">' +
+    '</div>' +
+
+    '<div class="form-row">' +
+        '<label>Max HP</label>' +
+        '<input type="number" value="' + char.max + '" oninput="updateField(' + i + ', \'max\', this.value)">' +
+    '</div>' +
+
+    '<div class="form-row">' +
+        '<label>Portrait</label>' +
+        '<select onchange="updateField(' + i + ', \'portrait\', this.value)">' +
+            buildPortraitOptions(char.portrait) +
+        '</select>' +
+    '</div>' +
+
+    '<button onclick="removeCharacter(' + i + ')">Remove</button>' +
+
+'</div>';
 /* ---------------- INIT ---------------- */
 
 window.addEventListener("DOMContentLoaded", buildUI);
