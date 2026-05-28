@@ -23,8 +23,8 @@ let partyData = [
 ];
 
 const availableJobs = [
-    "barbarian","bard","cleric","druid","fighter","monk",
-    "paladin","ranger","rogue","sorcerer","warlock","wizard"
+    "artificer","barbarian","bard","bloodhunter","cleric","druid","fighter","gunslinger","monk",
+    "paladin","pugilist","ranger","rogue","sorcerer","theurge","warlock","witch","wizard"
 ];
 
 const jobStyles = {
