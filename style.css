@@ -183,9 +183,9 @@ body {
 
 /* MAIN JOB BAR */
 .job-bar {
-    flex: 1 1 0px;       /* Forces perfectly equal width sharing between 1, 2, or 3 items */
-    min-width: 0;        /* Overrides default text widths to prevent layout breaking */
-    height: 22px;        /* Strict vertical lock */
+    flex: 1 1 100%;      /* Changed from 0px to 100% so single items occupy full width */
+    min-width: 0;        
+    height: 22px;        
     border-radius: 6px;
     position: relative;
     overflow: hidden;
@@ -194,7 +194,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    font-size: 9px;      /* Slightly smaller font to accommodate 3 blocks cleanly */
+    font-size: 9px;      
     font-weight: bold;
     white-space: nowrap;
     padding: 0 2px;
