@@ -1,4 +1,3 @@
-```js id="h43a0r"
 const urlParams = new URLSearchParams(window.location.search);
 const isViewMode = urlParams.get('mode') === 'view';
 
