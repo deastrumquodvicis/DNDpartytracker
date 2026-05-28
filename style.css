@@ -170,7 +170,7 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
-/* THE TRACK CONTROLLER: Defines the box footprint, shape, and clips the contents */
+/* THE TRACK CONTROLLER: Outlines the primary canvas boundary */
 .job-container {
     display: flex;
     gap: 0px;            
@@ -182,78 +182,77 @@ margin-left:1px;
     margin-top: 8px;
     
     position: relative;
-    
-    /* Forces the capsule shape across ALL layers inside this container */
     border-radius: 20px; 
     overflow: hidden;    
+    
+    /* REMOVED: Black base color deleted so no dark voids leak out */
     background-color: transparent; 
     z-index: 1;
 }
 
-/* 1. THE BOTTOM BACKPLATE (Unified Layer)
-   By using a pseudo-element on the parent container, the WebP asset renders 
-   as a single, continuous, unbroken image layer *underneath* all class splits. */
+/* 1. THE BOTTOM BACKPLATE (Unified Base Graphic) */
 .job-container::before {
     content: "";
     position: absolute;
-    
-    /* Adjust these bounds outward (e.g., -2px, -4px) if you want the WebP frame 
-       to look larger/glowing outside the clipped color bar boundaries! */
     inset: 0px; 
     
     background-image: url('HP bar 200px.webp');
     background-size: 100% 100%; 
     background-position: center;
     background-repeat: no-repeat;
-    transform: scaleY(-1); /* Flips the asset vertically as intended */      
+    transform: scaleY(-1);       
     pointer-events: none;
-    
-    /* Locks it firmly below the colored bars */
     z-index: 1; 
 }
 
-/* 2. MIDDLE LAYER: Individual Class Blocks */
+/* 2. THE FLEX POSITIONER CELL */
 .job-bar {
     flex: 1 1 100%;      
-    min-width: 0;    
-    max-width: 91%; 
-    height: 67%;        
+    min-width: 0;        
+    height: 100%; /* Keeps layout grid tracking at full size */       
     position: relative;
     
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* Pulls your transparent 'bb' color strings directly from your JS object definitions */
-    background-color: var(--job-color, inherit); 
-    
-    /* Keeps the bar element fully opaque so your child text node stays bright */
-    opacity: 1; 
-    
-    /* Sits directly above the unified WebP backplate */
+    background-color: transparent !important; 
     z-index: 2; 
 }
 
-/* 3. THE TEXT WRAPPER (Top Layer) */
+/* 3. THE ACTUAL PRECISION COLOR LAYER (Middle Sandwich) */
+.job-bar::after {
+    content: "";
+    position: absolute;
+    
+    /* TARGETED FIX: Shrinks the color blocks down to the precise dimensions.
+       Centering formula: (100% - target%) / 2 */
+    top: 17.5%;      /* Centered vertically: (100 - 65) / 2 */
+    height: 65%;     /* Exact requested height */
+    
+    left: 5%;        /* Centered horizontally: (100 - 90) / 2 */
+    width: 90%;      /* Exact requested width */
+    
+    background-color: var(--job-color, inherit); 
+    
+    /* Give the inner color pills a soft capsule roundness to match the layout frame */
+    border-radius: 4px; 
+    z-index: -1; 
+}
+
+/* 4. THE TEXT WRAPPER (Top Layer Surface) */
 .job-text-span {
     position: relative;
-    
-    /* Pushes text straight to the surface of the container stacking context */
     z-index: 10; 
     
     font-size: 9px;      
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
-    
-    /* Deep text shadow prevents color blending from washing out typography readability */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
 
-/* Clean up any lingering pseudo elements */
-.job-container::after,
-.job-bar::before,
-.job-bar::after {
+/* Housekeeping rule to clean up unneeded layers */
+.job-bar::before {
     display: none !important;
 }
 /* ---------------- FORM PANEL ---------------- */
