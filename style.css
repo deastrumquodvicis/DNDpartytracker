@@ -86,8 +86,8 @@ body {
     max-height: 135px;
     object-fit: contain;
     z-index: 15;
-    margin-top: 1px;
-    margin-left: 1px;
+    margin-top: .5px;
+    margin-left: .5px;
     transition: filter 0.5s ease;
 }
 
