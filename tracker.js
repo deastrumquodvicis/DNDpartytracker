@@ -28,24 +28,24 @@ const availableJobs = [
 ];
 
 const jobStyles = {
-    barbarian: { color: "#F4641Caa", text: "white" },
-    bard: { color: "#F9B8E6aa", text: "black" },
-    cleric: { color: "#BFBFBFaa", text: "black" },
-    druid: { color: "#31B32Baa", text: "white" },
-    fighter: { color: "#753E1Daa", text: "white" },
-    monk: { color: "#FFEB93aa", text: "black" },
-    paladin: { color: "#f7dc6faa", text: "black" },
-    ranger: { color: "#376A0Eaa", text: "white" },
-    rogue: { color: "#080808eaa", text: "white" },
-    sorcerer: { color: "#D91A1Aaa", text: "white" },
-    warlock: { color: "#8629B3aa", text: "white" },
-    artificer: { color: "#B69A1Aaa", text: "black" },
-    pugilist: { color: "#21B09Baa", text: "black" },
-    gunslinger: { color: "#C79C7Faa", text: "white" },
-    bloodhunter: { color: "#7E0100aa", text: "white" },
-    witch: { color: "#FF40F2aa", text: "white" },
-    theurge: { color: "#2CFFF8aa", text: "white" },
-    wizard: { color: "#1E87E6aa", text: "white" }
+    barbarian: { color: "#F4641Cdd", text: "white" },
+    bard: { color: "#F9B8E6dd", text: "black" },
+    cleric: { color: "#BFBFBFdd", text: "black" },
+    druid: { color: "#31B32Bdd", text: "white" },
+    fighter: { color: "#753E1Ddd", text: "white" },
+    monk: { color: "#FFEB93dd", text: "black" },
+    paladin: { color: "#f7dc6fdd", text: "black" },
+    ranger: { color: "#376A0Edd", text: "white" },
+    rogue: { color: "#080808dd", text: "white" },
+    sorcerer: { color: "#D91A1Add", text: "white" },
+    warlock: { color: "#8629B3dd", text: "white" },
+    artificer: { color: "#B69A1Add", text: "white" },
+    pugilist: { color: "#21B09Bdd", text: "black" },
+    gunslinger: { color: "#C79C7Fdd", text: "white" },
+    bloodhunter: { color: "#7E0100dd", text: "white" },
+    witch: { color: "#FF40F2dd", text: "white" },
+    theurge: { color: "#2CFFF8dd", text: "white" },
+    wizard: { color: "#1E87E6dd", text: "white" }
 };
 
 const jobAbbreviations = {
