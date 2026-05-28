@@ -24,7 +24,7 @@ let partyData = [
 
 const availableJobs = [
     "artificer","barbarian","bard","bloodhunter","cleric","druid","fighter","gunslinger","monk",
-    "paladin","pugilist","ranger","rogue","sorcerer","theurge","warlock","witch","wizard"
+    "paladin","pugilist","ranger","rogue","sorcerer","theurge","warlock","witch","wizard","⸻","sidekick"
 ];
 
 const jobStyles = {
@@ -45,6 +45,8 @@ const jobStyles = {
     bloodhunter: { color: "#7E0100dd", text: "white" },
     witch: { color: "#FF40F2dd", text: "white" },
     theurge: { color: "#2CFFF8dd", text: "white" },
+    sidekick: { color: "#2CFFF8dd", text: "white" },
+     ⸻: { color: "#808080dd", text: "white" },
     wizard: { color: "#1E87E6dd", text: "white" }
 };
 
@@ -64,6 +66,8 @@ const jobFullLabels = {
     rogue: "Rogue",
     sorcerer: "Sorcerer",
     theurge: "Theurge",
+    sidekick: "Sidekick",
+    ⸻: "⸻",
     warlock: "Warlock",
     witch: "Witch",
     wizard: "Wizard"
@@ -87,6 +91,8 @@ const jobAbbreviations = {
     theurge: "THURG",
     warlock: "WRLK",
     witch: "WTCH",
+    sidekick: "SIDE",
+    ⸻: "⸺",
     wizard: "WZRD"
 };
 
