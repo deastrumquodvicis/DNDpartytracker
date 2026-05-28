@@ -169,97 +169,78 @@ margin-left:1px;
 
 /* ---------------- JOB SYSTEM ---------------- */
 
+/* THE OUTER FRAME: This holds your background image asset */
 .job-container {
-    display: flex;
-    gap: 0px;            
     width: 140px;        
     height: 22px;        
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
     margin-top: 8px;
-    
     position: relative;
+    z-index: 1;
+
+    /* Display the frame asset normally at full size without masking it */
+    background-image: url('HP bar 200px.webp');
+    background-size: 100% 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scaleY(-1);       
+    pointer-events: none;        
+}
+
+/* THE CLIP wrapper: Slices ONLY the background colors into the capsule shape */
+.job-clip-wrapper {
+    position: absolute;
+    inset: 2px 4px; /* Adjust these values to shrink/grow the color area inside the frame */
+    display: flex;
+    flex-wrap: nowrap;
     border-radius: 20px;
-    
-    /* 1. KEEP THE MASK STABLE AT 100% SIZE */
+    overflow: hidden;
+    z-index: 2;
+
+    /* Masking is applied ONLY to this internal track, leaving the outer frame alone */
     -webkit-mask-image: url('HP bar 200px.webp');
     mask-image: url('HP bar 200px.webp');
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
-
-    transform: scaleY(-1); 
-    z-index: 1;
 }
 
-/* 2. MAKE THE FRAME IMAGE VISUALLY LARGER THAN THE MASK MESH */
-.job-container::before {
-    content: "";
-    position: absolute;
-    
-    /* Pushing 'inset' into negative numbers pulls the asset boundaries OUTWARD,
-       making the image larger without changing the mask-size container clip boundaries! 
-       Adjust -4px to -6px if you want it even bigger. */
-    inset: -4px; 
-    
-    background-image: url('HP bar 200px.webp');
-    background-size: 105% 105%;
-    background-position: center;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    z-index: 5; /* Puts the frame lines on top of the background color fills */
-}
-
-/* INDIVIDUAL JOB PILL CONTAINER */
+/* INDIVIDUAL JOB COLOR BAR */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
     height: 100%;        
     position: relative;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2; 
-    
-    /* Remove base background assignment so it doesn't fight our opacity wrapper */
-    background-color: transparent !important; 
-}
-
-/* 3. ISOLATED 70% OPAQUE BACKGROUND FILL */
-.job-bar::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    
-    /* Pulls your JavaScript inline background style dynamically */
     background-color: var(--job-color, inherit); 
     
-    /* FIXED: This applies 70% opacity strictly to the color panel bar background, 
-       completely bypassing the text span layer! */
+    /* Sets the color bar panel to exactly 70% opacity */
     opacity: 0.7; 
-    
-    z-index: -1; 
+    z-index: 1;
 }
 
-/* THE TEXT WRAPPER */
-.job-text-span {
-    display: inline-block;
-    position: relative;
-    transform: scaleY(-1); /* Counter-flip text layer */
-    
-    /* Crucial layer alignment: hovers above the frame and the transparent backings */
+/* THE TEXT WRAPPER: Placed completely outside the mask so it is 100% crisp and visible */
+.job-text-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* Adds spacing between text blocks if multiclassing */
     z-index: 10; 
-    
+    pointer-events: none;
+}
+
+.job-text-span {
     font-size: 9px;      
     font-weight: bold;
+    
+    /* Pulls color from style attribute, remaining 100% solid solid opaque */
     color: inherit; 
     white-space: nowrap;
-    
-    /* Slightly boosted text shadow so it pops flawlessly over a semi-transparent panel background */
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
+    
+    /* Counter-flips the text because the parent container uses scaleY(-1) */
+    transform: scaleY(-1); 
 }
 /* ---------------- FORM PANEL ---------------- */
 
