@@ -68,7 +68,37 @@ body {
 .control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 2px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
 .hp-inputs { display: flex; gap: 5px; width: 100%; }
 .hp-inputs input { width: 50px; }
+.job-container {
+    display: flex;
+    gap: 4px;
 
+    width: 100%;
+
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 4px;
+}
+
+.job-bar {
+    flex: 1;
+
+    min-width: 0;
+
+    background: #444;
+
+    border-radius: 6px;
+
+    padding: 3px 6px;
+
+    font-size: 11px;
+
+    text-align: center;
+
+    color: white;
+
+    text-transform: capitalize;
+}
 .class-bars-container { display: flex; gap: 4px; justify-content: center; align-items: center; width: 100%; margin-top: 5px; min-height: 20px;}
 .class-type-bar {
     display: inline-flex; align-items: center; justify-content: center; flex: 1; height: 20px;
