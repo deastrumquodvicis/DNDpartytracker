@@ -4,90 +4,7 @@
     <meta charset="UTF-8">
     <title>Live Party Overlay & Control Board</title>
     <link rel="stylesheet" href="https://googleapis.com">
-    <style>
-        html, body {
-            width: 100%; height: 100%; padding: 0; margin: 0;
-            background-color: transparent !important;
-            font-family: 'Aldrich', sans-serif;
-        }
-        .master-container { display: flex; width: 100%; height: 100vh; position: relative;}
-        
-        .control-panel {
-            width: 380px; background: #1a1a24; color: #fff; padding: 15px;
-            box-sizing: border-box; overflow-y: auto; border-right: 3px solid #333; z-index: 999;
-        }
-        
-        .control-panel.hidden { display: none !important; }
-        .stream-overlay-area { flex-grow: 1; background: transparent; position: relative; overflow: hidden; }
-
-        .party-container {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
-            padding: 20px; align-items: flex-start; width: 100%; box-sizing: border-box;
-        }
-        .char-slot {
-            width: 140px; display: flex; padding-left: 10px; padding-right: 10px;
-            flex-direction: column; align-items: center; background-color: transparent; overflow: visible !important;
-        }
-        .portrait-area {
-            height: 161px; width: 160px; display: flex; justify-content: center; align-items: center;
-            position: relative; z-index: 10;
-            background-image: url('pokemon%20hex2pic 200px.webp') !important;
-            background-size: 150px !important; background-repeat: no-repeat !important; background-position: center center !important;
-        }
-        .char-image { max-height: 140px; max-width: 140px; width: auto; z-index: 15; filter: drop-shadow(0px 4px 3px rgba(0, 0, 0, 0.8)); transition: filter 0.5s ease;}
-        .dead-portrait { filter: drop-shadow(0px 4px 3px rgba(0, 0, 0, 0.8)) grayscale(100%) brightness(50%) !important; }
-        
-        .progress {
-            position: relative !important; width: 100%; height: 32px !important; 
-            background-image: url('HP%20bar 200px.webp') !important;
-            background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important;
-            background-color: transparent !important; padding: 4px 8px !important; box-sizing: border-box !important; margin-top: -15px;
-        }
-        .progress-bar { height: 68% !important; border-radius: 10px !important; transition: width 0.3s ease, background-color 0.3s ease; margin-top: 3%; margin-left: 2px; will-change: width; }
-        .progress-bar.green  { background: #00d412a0 !important; } 
-        .progress-bar.yellow { background: #ceb10cc7 !important; } 
-        .progress-bar.red    { background: #ff0000a0 !important; } 
-        .progress-bar.grey   { background: #646464 !important; }   
-        
-        .char-name { font-size: 1.5rem; color: rgb(0, 255, 255) !important; text-align: center; margin-top: 8px; filter: drop-shadow(2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(-2px 0 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)) drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.6)); }
-        .char-pronouns { font-weight: bold; font-size: 0.9rem; color: #afafff !important; text-align: center; margin-top: 2px; }
-        .char-player { font-weight: bold; font-size: .8rem; color: #afcbff !important; text-align: center; margin-top: 2px; }
-        .hp-text { font-size: 0.9rem; color: white !important; text-align: center; margin-top: -24px; text-shadow: 1px 1px 2px black !important; z-index: 20; }
-        .char-slot, .progress { overflow: visible !important; }
-        
-        .control-panel h3 { margin: 0 0 10px 0; color: cyan; font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 5px;}
-        .char-form-block { background: #252533; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 4px solid #e76eff; position: relative;}
-        .form-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
-        .form-row label { width: 50px; font-size: 0.8rem; color: #ccc; }
-        .control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 4px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
-        .hp-inputs { display: flex; gap: 5px; width: 100%; }
-        .hp-inputs input { width: 50px; }
-
-        .class-bars-container { display: flex; gap: 4px; justify-content: center; align-items: center; width: 100%; margin-top: 5px; min-height: 20px;}
-        .class-type-bar {
-            display: inline-flex; align-items: center; justify-content: center; flex: 1; height: 20px;
-            background-size: 100% 100% !important; background-repeat: no-repeat !important; background-position: center !important;
-            font-family: 'Aldrich', sans-serif; font-size: 10px; font-weight: bold;
-            text-shadow: 1px 1px 2px #000; text-transform: none; will-change: background-image;
-        }
-
-        .class-bar-none { display: none !important; }
-        .class-bar-barbarian { background-image: url('HP bar 200px.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-        .class-bar-fighter { background-image: url('type fighter.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-        .class-bar-wizard { background-image: url('type wizard.webp') !important; color: #ffffff !important; text-shadow: 1px 1px 2px #000000 !important; }
-        .class-bar-cleric { background-image: url('HP bar 200px.webp') !important; color: #222222 !important; text-shadow: none !important; }
-        .class-bar-bard { background-image: url('HP bar 200px.webp') !important; color: #111111 !important; text-shadow: none !important; }
-        .class-bar-bug { background-image: url('type bug.webp') !important; color: #000000 !important; text-shadow: 0px 0px 5px black !important; }
-
-        .global-controls { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #444; display: flex; gap: 5px; }
-        .btn { width: 100%; padding: 8px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; font-family: sans-serif; }
-        .btn-add { background: #00d412; color: #fff; }
-        .btn-add:hover { background: #00b30f; }
-        .btn-toggle { background: #44445c; color: #fff; width: auto !important; white-space: nowrap; }
-        .btn-toggle:hover { background: #555570; }
-        .btn-remove { background: #ff3333; color: #fff; margin-top: 10px; font-size: 0.75rem; padding: 4px; width: 100%; }
-        .btn-remove:hover { background: #cc0000; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="master-container">
@@ -99,19 +16,3 @@
         <div id="party-target" class="party-container"></div>
     </div>
 </div>
-<script>
-// --- CLOUD DATABASE CONNECTIONS ---
-var BIN_ID = "6a17e7aa21f9ee59d2942861";
-var MASTER_KEY = "$2a$10$9c4468sUxAYIXJeHOiWzleiSswaWsA43em.565yokW2ueiaQSWU.K";
-
-var urlParams = new URLSearchParams(window.location.search);
-var isViewMode = urlParams.get('mode') === 'view';
-
-window.addEventListener('DOMContentLoaded', function() {
-    var panel = document.getElementById('ui-controls');
-    if (panel && isViewMode) {
-        panel.classList.add('hidden');
-    }
-});
-
-partyData = defaultParty;var availablePortraits = new Array();availablePortraits.push("red_mage.png");availablePortraits.push("warrior.png");availablePortraits.push("black_belt.png");availablePortraits.push("white_mage.png");var availableClasses = new Array();availableClasses.push({ id: "none", label: "None / Single Class" });availableClasses.push({ id: "barbarian", label: "Barbarian" });availableClasses.push({ id: "bard", label: "Bard" });availableClasses.push({ id: "cleric", label: "Cleric" });availableClasses.push({ id: "druid", label: "Druid" });availableClasses.push({ id: "fighter", label: "Fighter" });availableClasses.push({ id: "monk", label: "Monk" });availableClasses.push({ id: "paladin", label: "Paladin" });availableClasses.push({ id: "ranger", label: "Ranger" });availableClasses.push({ id: "rogue", label: "Rogue" });availableClasses.push({ id: "sorcerer", label: "Sorcerer" });availableClasses.push({ id: "warlock", label: "Warlock" });availableClasses.push({ id: "wizard", label: "Wizard" });availableClasses.push({ id: "bug", label: "Bug (Test)" });function initialBuild() {var target = document.getElementById('party-target');var formsContainer = document.getElementById('forms-container');var htmlContent = '';var formContent = 'Add CharacterHide Panels';partyData.forEach(function(char, index) {htmlContent += '0 / 0' + char.name + '' + char.pronouns + '' + char.player + '';formContent += 'Slot ' + (index + 1) + ': ' + (char.name || 'Unnamed') + 'HP:/Name:Pronouns:Player:Class 1:BarbarianBardClericDruidFighterMonkPaladinRangerRogueSorcererWarlockWizardBug (Test)Class 2:None / Single ClassBarbarianBardClericDruidFighterMonkPaladinRangerRogueSorcererWarlockWizardBug (Test)Portrait:red_mage.pngwarrior.pngblack_belt.pngwhite_mage.pngRemove Character';});if (target) target.innerHTML = htmlContent;if (formsContainer) formsContainer.innerHTML = formContent;updateVisualsOnly();}function updateVisualsOnly() {partyData.forEach(function(char, index) {var percent = Math.min(Math.max((char.current / char.max) * 100, 0), 100);if (isNaN(percent)) percent = 0;var colorClass = 'green';if (char.current <= 0) { colorClass = 'grey'; }else if (percent <= 10) { colorClass = 'red'; }else if (percent <= 50) { colorClass = 'yellow'; }var bar = document.getElementById('stream-bar-' + index);if (bar) { bar.style.width = percent + '%'; bar.className = 'progress-bar ' + colorClass; }var hpText = document.getElementById('stream-hptext-' + index);if (hpText) hpText.innerText = char.current + ' / ' + char.max;var nameText = document.getElementById('stream-name-' + index);if (nameText) nameText.innerText = char.name;var pronounsText = document.getElementById('stream-pronouns-' + index);if (pronounsText) pronounsText.innerText = char.pronouns;var playerText = document.getElementById('stream-player-' + index);if (playerText) playerText.innerText = char.player;var c1Bar = document.getElementById('stream-class1-' + index);if (c1Bar) {var label1 = char.class1;for (var i = 0; i < availableClasses.length; i++) { if (availableClasses[i].id === char.class1) label1 = availableClasses[i].label; }c1Bar.innerText = label1; c1Bar.className = 'class-type-bar class-bar-' + char.class1;}var c2Bar = document.getElementById('stream-class2-' + index);if (c2Bar) {if (char.class2 === 'none' || !char.class2) { c2Bar.innerText = ''; c2Bar.className = 'class-bar-none'; }else {var label2 = char.class2;for (var j = 0; j < availableClasses.length; j++) { if (availableClasses[j].id === char.class2) label2 = availableClasses[j].label; }c2Bar.innerText = label2; c2Bar.className = 'class-type-bar class-bar-' + char.class2;}}var imgElem = document.getElementById('stream-img-' + index);if (imgElem) {imgElem.src = char.portrait; imgElem.style.display = 'block';if (char.current <= 0) { imgElem.className = 'char-image dead-portrait'; } else { imgElem.className = 'char-image'; }}var uiTitle = document.getElementById('ui-title-' + index);if (uiTitle) uiTitle.innerText = 'Slot ' + (index + 1) + ': ' + (char.name || 'Unnamed');});}var saveTimeout = null;function updateField(index, field, value) {if (field === 'current' || field === 'max') { partyData[index][field] = parseInt(value) || 0; } else { partyData[index][field] = value; }updateVisualsOnly();if (!isViewMode) { clearTimeout(saveTimeout); saveTimeout = setTimeout(pushDataToCloud, 400); }}function addNewCharacter() {partyData.push({ name: "New Hero", current: 10, max: 10, pronouns: "they/them", class1: "fighter", class2: "none", player: "Guest", portrait: "warrior.png" });initialBuild();if (!isViewMode) pushDataToCloud();}function removeCharacter(index) {if (confirm("Are you sure you want to delete this slot?")) { partyData.splice(index, 1); initialBuild(); if (!isViewMode) pushDataToCloud(); }}function toggleOverlayArea() { var panel = document.getElementById('ui-controls'); if (panel) { panel.classList.toggle('hidden'); } }function pushDataToCloud() {var xhr = new XMLHttpRequest();xhr.open('PUT', 'jsonbin.io' + BIN_ID, true);xhr.setRequestHeader('Content-Type', 'application/json');xhr.setRequestHeader('X-Master-Key', MASTER_KEY);xhr.send(JSON.stringify({ party: partyData }));}function loadDataFromCloud(isInitial) {var xhr = new XMLHttpRequest();xhr.open('GET', 'jsonbin.io' + BIN_ID + '/latest', true);xhr.setRequestHeader('X-Master-Key', MASTER_KEY);xhr.onload = function() {if (xhr.status === 200) {var response = JSON.parse(xhr.responseText);if (response.record && response.record.party) {var incoming = response.record.party;if (incoming.length === 0 && !isViewMode && isInitial) { pushDataToCloud(); return; }if (JSON.stringify(incoming) !== JSON.stringify(partyData)) {var lengthShift = incoming.length !== partyData.length;partyData = incoming;if (lengthShift || isInitial) { initialBuild(); } else { updateVisualsOnly(); }}}}};xhr.send();}if (isViewMode) { setInterval(function() { loadDataFromCloud(false); }, 1500); }loadDataFromCloud(true);
