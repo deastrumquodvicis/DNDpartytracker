@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Live Party Overlay & Control Board</title>
+    <!-- We are swapping the local ttf file for a native web link to fix the lost font issue -->
+    <link rel="stylesheet" href="https://googleapis.com">
     <style>
-        @font-face {
-            font-family: 'Aldrich';
-            src: url('../fonts/Aldrich-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
         html, body {
             width: 100%; height: 100%; padding: 0; margin: 0;
             background-color: transparent !important;
@@ -116,9 +112,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Private cross-window network pipeline for your live website URL
-var streamChannel = new BroadcastChannel('stream_party_hotline');
-
 var defaultParty = [
     { name: "Dea", current: 30, max: 30, pronouns: "they/them", class1: "wizard", class2: "none", player: "Stream", portrait: "red_mage.png" },
     { name: "Bruh", current: 35, max: 35, pronouns: "he/him", class1: "fighter", class2: "none", player: "Stream", portrait: "warrior.png" },
@@ -156,7 +149,6 @@ function initialBuild() {
     '</div>';
 
     partyData.forEach(function(char, index) {
-        // 1. Build clean stream display graphics layout
         htmlContent += '<div class="char-slot" id="p' + index + '">' +
             '<div class="portrait-area">' +
                 '<img id="stream-img-' + index + '" class="char-image" src="' + char.portrait + '" onerror="this.style.display=\'none\'">' +
@@ -174,7 +166,6 @@ function initialBuild() {
             '<div id="stream-player-' + index + '" class="char-player">' + char.player + '</div>' +
         '</div>';
 
-        // 2. Build dashboard dropdown options
         var class1Options = '';
         availableClasses.forEach(function(cls) {
             if(cls.id !== 'none') {
@@ -195,7 +186,6 @@ function initialBuild() {
             portraitOptions += '<option value="' + img + '" ' + selected + '>' + img + '</option>';
         });
 
-        // 3. Build live configuration dashboard modules
         formContent += '<div class="char-form-block">' +
             '<strong id="ui-title-' + index + '">Slot ' + (index + 1) + ': ' + (char.name || 'Unnamed') + '</strong>' +
             '<div class="form-row" style="margin-top:5px;">' +
@@ -327,8 +317,6 @@ function updateField(index, field, value) {
         partyData[index][field] = value;
     }
     updateVisualsOnly();
-    // Broadcast text modifications instantly over the secure network pipeline
-    streamChannel.postMessage({ type: 'UPDATE_DATA', data: partyData });
 }
 
 function addNewCharacter() {
@@ -336,14 +324,12 @@ function addNewCharacter() {
         name: "New Hero", current: 10, max: 10, pronouns: "they/them", class1: "fighter", class2: "none", player: "Guest", portrait: "warrior.png"
     });
     initialBuild();
-    streamChannel.postMessage({ type: 'REDRAW_ALL', data: partyData });
 }
 
 function removeCharacter(index) {
     if (confirm("Are you sure you want to delete this slot?")) {
         partyData.splice(index, 1);
         initialBuild();
-        streamChannel.postMessage({ type: 'REDRAW_ALL', data: partyData });
     }
 }
 
@@ -354,17 +340,21 @@ function toggleOverlayArea() {
     }
 }
 
-// Catch network transmissions sent from your active dashboard window
-streamChannel.onmessage = function(event) {
-    if (event.data && event.data.data) {
-        partyData = event.data.data;
-        if (event.data.type === 'REDRAW_ALL') {
-            initialBuild();
-        } else {
-            updateVisualsOnly();
+// 🌐 THE NATIVE WEB STORAGE HOTLINE: Fires instantly across common domains 
+window.addEventListener('storage', function(event) {
+    if (event.key === 'ff1_stream_party' && event.newValue) {
+        var parsed = JSON.parse(event.newValue);
+        if (JSON.stringify(parsed) !== JSON.stringify(partyData)) {
+            var oldLength = partyData.length;
+            partyData = parsed;
+            if (partyData.length !== oldLength) {
+                initialBuild();
+            } else {
+                updateVisualsOnly();
+            }
         }
     }
-};
+});
 
 initialBuild();
 </script>
