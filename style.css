@@ -202,9 +202,9 @@ margin-left:1px;
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-    flex: 1 1 60%;      
+width:70%     
     min-width: 0;        
-    height: 70%;        
+    height: 72%;        
     position: relative;
       
     display: flex;
