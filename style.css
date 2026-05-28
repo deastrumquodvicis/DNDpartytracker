@@ -202,11 +202,11 @@ margin-left:1px;
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-width:70%     
+width:90%     
     min-width: 0;        
     height: 72%;        
     position: relative;
-      
+      border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -218,6 +218,7 @@ width:70%
 /* Ensure the background color maps cleanly from your JS inline styles */
 .job-bar {
     background-color: var(--job-color, inherit); 
+    
 }
 
 /* THE TEXT WRAPPER 
