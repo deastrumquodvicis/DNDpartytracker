@@ -41,6 +41,83 @@ const availableJobs = [
     "warlock",
     "wizard"
 ];
+const jobStyles = {
+
+    barbarian: {
+        color: "#a93226aa",
+        text: "white"
+    },
+
+    bard: {
+        color: "#f4d03faa",
+        text: "black"
+    },
+
+    cleric: {
+        color: "#f8e287aa",
+        text: "black"
+    },
+
+    druid: {
+        color: "#239b56aa",
+        text: "white"
+    },
+
+    fighter: {
+        color: "#922b21aa",
+        text: "white"
+    },
+
+    monk: {
+        color: "#dc7633aa",
+        text: "black"
+    },
+
+    paladin: {
+        color: "#f7dc6faa",
+        text: "black"
+    },
+
+    ranger: {
+        color: "#196f3daa",
+        text: "white"
+    },
+
+    rogue: {
+        color: "#34495eaa",
+        text: "white"
+    },
+
+    sorcerer: {
+        color: "#8e44adaa",
+        text: "white"
+    },
+
+    warlock: {
+        color: "#4a235aaa",
+        text: "white"
+    },
+
+    wizard: {
+        color: "#5b2c6faa",
+        text: "white"
+    }
+};
+const jobAbbreviations = {
+
+    barbarian: "BARB",
+    bard: "BARD",
+    cleric: "CLRC",
+    druid: "DRUD",
+    fighter: "FGHT",
+    monk: "MONK",
+    paladin: "PAL",
+    ranger: "RANG",
+    rogue: "ROG",
+    sorcerer: "SORC",
+    warlock: "WRLK",
+    wizard: "WZRD"
+};
 const availablePortraits = [
     "images/ayame.png",
     "images/dannika.png",
@@ -85,31 +162,39 @@ function buildJobBars(jobs) {
 
     let html = '';
 
+    const useAbbreviations = jobs.length >= 3;
+
     for (let i = 0; i < jobs.length; i++) {
 
-        html +=
-            '<div class="job-bar">' +
-                jobs[i] +
-            '</div>';
-    }
+        const job = jobs[i];
 
-    return html;
-}
-function buildJobOptions(selected) {
+        const style =
+            jobStyles[job] ||
+            {
+                color: "#666666aa",
+                text: "white"
+            };
 
-    let html = '';
+        let label = job;
 
-    for (let i = 0; i < availableJobs.length; i++) {
+        if (useAbbreviations) {
 
-        const job = availableJobs[i];
-
-        html += '<option value="' + job + '"';
-
-        if (job === selected) {
-            html += ' selected';
+            label =
+                jobAbbreviations[job] ||
+                job.substring(0, 3).toUpperCase();
         }
 
-        html += '>' + job + '</option>';
+        html +=
+            '<div class="job-bar ' + job + '" ' +
+
+                'style="' +
+                    'background-color:' + style.color + ';' +
+                    'color:' + style.text + ';' +
+                '">' +
+
+                label +
+
+            '</div>';
     }
 
     return html;
