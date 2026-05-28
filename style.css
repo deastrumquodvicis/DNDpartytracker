@@ -182,7 +182,7 @@ margin-left:1px;
     position: relative;
     border-radius: 20px;
     
-    /* 1. THE COOKIE CUTTER: Slices your colors perfectly into the capsule shape */
+    /* 1. KEEP THE MASK STABLE AT 100% SIZE */
     -webkit-mask-image: url('HP bar 200px.webp');
     mask-image: url('HP bar 200px.webp');
     -webkit-mask-size: 100% 100%;
@@ -190,53 +190,76 @@ margin-left:1px;
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
 
-    /* Flips it vertically to mirror your design layout choice */
     transform: scaleY(-1); 
-    
-    background-color: #111; 
     z-index: 1;
 }
 
-/* INDIVIDUAL JOB PILL */
+/* 2. MAKE THE FRAME IMAGE VISUALLY LARGER THAN THE MASK MESH */
+.job-container::before {
+    content: "";
+    position: absolute;
+    
+    /* Pushing 'inset' into negative numbers pulls the asset boundaries OUTWARD,
+       making the image larger without changing the mask-size container clip boundaries! 
+       Adjust -4px to -6px if you want it even bigger. */
+    inset: -4px; 
+    
+    background-image: url('HP bar 200px.webp');
+    background-size: 105% 105%;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 5; /* Puts the frame lines on top of the background color fills */
+}
+
+/* INDIVIDUAL JOB PILL CONTAINER */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 100%; /* Fills the panel vertically completely */       
+    height: 100%;        
     position: relative;
     
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2; 
+    
+    /* Remove base background assignment so it doesn't fight our opacity wrapper */
+    background-color: transparent !important; 
 }
 
-/* Ensure the background color maps cleanly from your JS inline styles */
-.job-bar {
+/* 3. ISOLATED 70% OPAQUE BACKGROUND FILL */
+.job-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    
+    /* Pulls your JavaScript inline background style dynamically */
     background-color: var(--job-color, inherit); 
+    
+    /* FIXED: This applies 70% opacity strictly to the color panel bar background, 
+       completely bypassing the text span layer! */
+    opacity: 0.7; 
+    
+    z-index: -1; 
 }
 
 /* THE TEXT WRAPPER */
 .job-text-span {
     display: inline-block;
     position: relative;
+    transform: scaleY(-1); /* Counter-flip text layer */
     
-    /* 2. THE TEXT FIX: Because the parent container is flipped via scaleY(-1), 
-       the text gets turned upside down. This counter-flips it right-side up! */
-    transform: scaleY(-1); 
+    /* Crucial layer alignment: hovers above the frame and the transparent backings */
+    z-index: 10; 
     
-    z-index: 10; /* Hovers safely above the background mask context */
     font-size: 9px;      
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9); 
-}
-
-/* Completely remove the pseudo element overlay layer since the mask does all the heavy lifting! */
-.job-container::after,
-.job-bar::before,
-.job-bar::after {
-    display: none !important;
+    
+    /* Slightly boosted text shadow so it pops flawlessly over a semi-transparent panel background */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 1px rgba(0, 0, 0, 1); 
 }
 /* ---------------- FORM PANEL ---------------- */
 
