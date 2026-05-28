@@ -148,7 +148,13 @@ function buildUI() {
             <div class="char-player">${char.player}</div>
 
         </div>`;
-      editor += `
+  // Pull the character's jobs, filling empty slots up to 3 with empty strings
+        const charJobs = [...char.jobs];
+        while (charJobs.length < 3) {
+            charJobs.push(""); 
+        }
+
+        editor += `
         <div class="char-form-block">
             <h3>Character: ${char.name || 'New'}</h3>
             
@@ -187,8 +193,9 @@ function buildUI() {
             <div class="form-row">
                 <label>Jobs</label>
                 <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
-                    ${char.jobs.map((currentJob, jobIndex) => `
+                    ${charJobs.map((currentJob, jobIndex) => `
                         <select onchange="updateJob(${i}, ${jobIndex}, this.value)">
+                            <option value="">-- No Class --</option>
                             ${buildJobOptions(currentJob)}
                         </select>
                     `).join('')}
@@ -236,8 +243,22 @@ function updateField(i, field, value) {
     updateOverlayOnly();
 }
 function updateJob(charIndex, jobIndex, newJobValue) {
+    // 1. Ensure the jobs array exists
+    if (!partyData[charIndex].jobs) partyData[charIndex].jobs = [];
+    
+    // 2. Pad array with empty strings if it's missing slots up to the edited index
+    while (partyData[charIndex].jobs.length <= jobIndex) {
+        partyData[charIndex].jobs.push("");
+    }
+    
+    // 3. Update target slot
     partyData[charIndex].jobs[jobIndex] = newJobValue;
-    buildUI(); // Rebuild UI completely to update the job bar visual colors and labels
+    
+    // 4. Clean out empty elements so data stays clean (e.g. ["wizard", ""]) becomes ["wizard"]
+    partyData[charIndex].jobs = partyData[charIndex].jobs.filter(j => j !== "");
+    
+    // 5. Force a total UI rebuild to redraw the updated job configuration
+    buildUI(); 
 }
 /* ---------------- INIT ---------------- */
 
