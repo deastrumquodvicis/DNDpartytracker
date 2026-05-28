@@ -19,7 +19,41 @@ function getHpColor(percent, current) {
     if (percent <= 50) return "yellow";
     return "green";
 }
+function updateOverlayOnly() {
 
+    for (let i = 0; i < partyData.length; i++) {
+
+        const char = partyData[i];
+
+        const percent =
+            char.max > 0
+                ? (char.current / char.max) * 100
+                : 0;
+
+        let color = "green";
+
+        if (char.current <= 0) color = "grey";
+        else if (percent <= 10) color = "red";
+        else if (percent <= 50) color = "yellow";
+
+        const bar = document.querySelector("#pbar-" + i);
+        const hp = document.querySelector("#php-" + i);
+        const name = document.querySelector("#pname-" + i);
+
+        if (bar) {
+            bar.style.width = percent + "%";
+            bar.className = "progress-bar " + color;
+        }
+
+        if (hp) {
+            hp.textContent = char.current + " / " + char.max;
+        }
+
+        if (name) {
+            name.textContent = char.name;
+        }
+    }
+}
 function buildUI() {
 
     const target = document.getElementById("party-target");
