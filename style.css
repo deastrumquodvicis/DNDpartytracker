@@ -202,11 +202,10 @@ margin-left:1px;
 
 /* INDIVIDUAL JOB PILL */
 .job-bar {
-width:90%     
+width:120%;     
     min-width: 0;        
     height: 72%;        
     position: relative;
-      border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
