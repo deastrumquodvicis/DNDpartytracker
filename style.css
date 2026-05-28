@@ -1,278 +1,346 @@
-html,
-body {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
+const urlParams = new URLSearchParams(window.location.search);
+const isViewMode = urlParams.get("mode") === "view";
 
-    background: transparent !important;
-    font-family: 'Aldrich', sans-serif;
-    overflow: hidden;
+let partyData = [
+    {
+        name: "Dea",
+        current: 30,
+        max: 30,
+        portrait: "images/dannika.png",
+        pronouns: "they/them",
+        player: "Stream",
+        jobs: ["wizard"]
+    },
+    {
+        name: "Bruh",
+        current: 20,
+        max: 35,
+        portrait: "images/ayame.png",
+        pronouns: "he/him",
+        player: "Josh",
+        jobs: ["fighter", "rogue"]
+    }
+];
+
+const availableJobs = [
+    "artificer","barbarian","bard","bloodhunter","cleric","druid","fighter","gunslinger","monk",
+    "paladin","pugilist","ranger","rogue","sorcerer","theurge","warlock","witch","wizard","⸻","sidekick"
+];
+
+const jobStyles = {
+    barbarian: { color: "#F4641Cdd", text: "white" },
+    bard: { color: "#F9B8E6dd", text: "black" },
+    cleric: { color: "#BFBFBFdd", text: "black" },
+    druid: { color: "#31B32Bdd", text: "white" },
+    fighter: { color: "#753E1Ddd", text: "white" },
+    monk: { color: "#FFEB93dd", text: "black" },
+    paladin: { color: "#f7dc6fdd", text: "black" },
+    ranger: { color: "#376A0Edd", text: "white" },
+    rogue: { color: "#080808dd", text: "white" },
+    sorcerer: { color: "#D91A1Add", text: "white" },
+    warlock: { color: "#8629B3dd", text: "white" },
+    artificer: { color: "#B69A1Add", text: "white" },
+    pugilist: { color: "#21B09Bdd", text: "black" },
+    gunslinger: { color: "#C79C7Fdd", text: "white" },
+    bloodhunter: { color: "#7E0100dd", text: "white" },
+    witch: { color: "#FF40F2dd", text: "white" },
+    theurge: { color: "#2CFFF8dd", text: "white" },
+    sidekick: { color: "#2CFFF8dd", text: "white" },
+    "⸻": { color: "#808080dd", text: "white" },
+    wizard: { color: "#1E87E6dd", text: "white" }
+};
+
+const jobFullLabels = {
+    artificer: "Artificer",
+    barbarian: "Barbarian",
+    bard: "Bard",
+    bloodhunter: "Blood Hunter",
+    cleric: "Cleric",
+    druid: "Druid",
+    fighter: "Fighter",
+    gunslinger: "Gunslinger",
+    monk: "Monk",
+    paladin: "Paladin",
+    pugilist: "Pugilist",
+    ranger: "Ranger",
+    rogue: "Rogue",
+    sorcerer: "Sorcerer",
+    theurge: "Theurge",
+    sidekick: "Sidekick",
+    "⸻": "⸻",
+    warlock: "Warlock",
+    witch: "Witch",
+    wizard: "Wizard"
+};
+
+const jobAbbreviations = {
+    artificer: "RTFC",
+    barbarian: "BARB",
+    bard: "BARD",
+    bloodhunter: "BLDH",
+    cleric: "CLRC",
+    druid: "DRUD",
+    fighter: "FGHT",
+    gunslinger: "GUN",
+    monk: "MONK",
+    paladin: "PAL",
+    pugilist: "PUGI",
+    ranger: "RANG",
+    rogue: "ROG",
+    sorcerer: "SORC",
+    theurge: "THURG",
+    warlock: "WRLK",
+    witch: "WTCH",
+    sidekick: "SIDE",
+    "⸻": "⸺",
+    wizard: "WZRD"
+};
+
+const availablePortraits = [
+    "images/ayame.png",
+    "images/dannika.png",
+    "images/klofna_f.png",
+    "images/klofna_m.png",
+    "images/purple.png",
+    "images/shaktal.png"
+];
+
+/* ---------------- HELPERS ---------------- */
+
+function getPercent(char) {
+    if (!char.max || char.max <= 0) return 0;
+    return Math.max(0, Math.min(100, (char.current / char.max) * 100));
 }
 
-* {
-    box-sizing: border-box;
+function getColor(percent) {
+    if (percent <= 0) return "grey";
+    if (percent <= 10) return "red";
+    if (percent <= 50) return "yellow";
+    return "green";
 }
 
-/* ---------------- LAYOUT ---------------- */
+/* ---------------- BUILDERS ---------------- */
 
-.master-container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    position: relative;
+function buildJobOptions(selected) {
+    return availableJobs
+        .map(j => `<option value="${j}" ${j === selected ? "selected" : ""}>${j}</option>`)
+        .join("");
 }
 
-.control-panel {
-    width: 380px;
-    background: #1a1a24;
-    color: #fff;
-    padding: 15px;
-    overflow-y: auto;
-    border-right: 3px solid #333;
-    z-index: 999;
+function buildPortraitOptions(selected) {
+    return availablePortraits
+        .map(p => `<option value="${p}" ${p === selected ? "selected" : ""}>${p}</option>`)
+        .join("");
 }
 
-.control-panel.hidden {
-    display: none !important;
+function buildJobBars(jobs = []) {
+    const useAbbr = jobs.length >= 3;
+
+    return jobs.map(job => {
+        const style = jobStyles[job] || { color: "#666666aa", text: "#fff" };
+        
+        const label = useAbbr 
+            ? (jobAbbreviations[job] || job.slice(0,4).toUpperCase())
+            : (jobFullLabels[job] || job);
+
+        return `
+        <div class="job-bar ${job}"
+            style="background-color:${style.color}; color:${style.text}">
+            <span class="job-text-span">${label}</span>
+        </div>`;
+    }).join("");
 }
 
-.stream-overlay-area {
-    flex-grow: 1;
-    background: transparent;
-    position: relative;
-    overflow: hidden;
-}
+/* ---------------- RENDER ---------------- */
 
-.party-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-    align-items: flex-start;
-    width: 100%;
-}
+function buildUI() {
+    const target = document.getElementById("party-target");
+    const forms = document.getElementById("forms-container");
+    if (!target) return;
 
-/* ---------------- CHARACTER SLOT ---------------- */
+    let overlay = "";
+    let editor = "";
 
-.char-slot {
-    width: 140px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: transparent;
-}
+    partyData.forEach((char, i) => {
+        const percent = getPercent(char);
+        const color = getColor(percent);
 
-/* ---------------- PORTRAIT ---------------- */
+       overlay += `
+        <div class="char-slot">
 
-.portrait-area {
-    width: 140px;
-    height: 140px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+            <div class="portrait-area">
+                <img id="pimg-${i}" class="char-image" src="${char.portrait}">
+            </div>
 
-    z-index: 10;
-    background-image: url('pokemon hex2pic 200px.webp');
-    background-size: 150px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+            <div class="char-name" id="pname-${i}">${char.name}</div>
 
-.char-image {
-    max-width: 135px;
-    max-height: 135px;
-    object-fit: contain;
-    z-index: 15;
-    margin-top: 1px;
-    margin-left: 1px;
-    transition: filter 0.5s ease;
-}
+            <div class="char-pronouns" id="ppronouns-${i}">${char.pronouns}</div>
 
-.dead-portrait {
-    filter: grayscale(100%) brightness(75%);
-}
+            <div class="progress">
+                <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
+            </div>
+            <div id="php-${i}" class="hp-text">${char.current} / ${char.max}</div>
 
-/* ---------------- TEXT ---------------- */
+            <div class="job-container" style="margin-top: 8px;">
+                ${buildJobBars(char.jobs)}
+            </div>
 
-.char-name {
-    font-size: 1.5rem;
-    color: rgb(0, 255, 255) !important;
-    text-align: center;
-    margin-top: 8px;
+            <div class="char-player" id="pplayer-${i}">${char.player}</div>
 
-    text-shadow:
-        2px 0 2px rgba(0, 0, 0, 0.6),
-        -2px 0 2px rgba(0, 0, 0, 0.6),
-        0 2px 2px rgba(0, 0, 0, 0.6),
-        0 -2px 2px rgba(0, 0, 0, 0.6);
-}
+        </div>`;
 
-.char-pronouns {
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: #afafff !important;
-    text-align: center;
-    margin-top: 2px;
-}
+        // Pull the character's jobs, filling empty slots up to 3 with empty strings
+        const charJobs = [...char.jobs];
+        while (charJobs.length < 3) {
+            charJobs.push(""); 
+        }
 
-.char-player {
-    font-weight: bold;
-    font-size: 0.8rem;
-    color: #F103BB !important;
-    text-align: center;
-    margin-top: 2px;
-}
+        editor += `
+        <div class="char-form-block">
+            <h3>Character: ${char.name || 'New'}</h3>
+            
+            <div class="form-row">
+                <label>Name</label>
+                <input value="${char.name}" oninput="updateField(${i},'name',this.value)">
+            </div>
 
-/* ---------------- HP BAR ---------------- */
+            <div class="form-row">
+                <label>Pronouns</label>
+                <input value="${char.pronouns}" oninput="updateField(${i},'pronouns',this.value)">
+            </div>
 
-.progress {
-    position: relative;
-    width: 100%;
-    height: 32px;
+            <div class="form-row">
+                <label>Player</label>
+                <input value="${char.player}" oninput="updateField(${i},'player',this.value)">
+            </div>
 
-    background-image: url('HP bar 200px.webp');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+            <div class="form-row">
+                <label>HP Current</label>
+                <input type="number" value="${char.current}" oninput="updateField(${i},'current',this.value)">
+            </div>
 
-    padding: 4px 8px;
-    margin-top: 4px;
-}
+            <div class="form-row">
+                <label>HP Max</label>
+                <input type="number" value="${char.max}" oninput="updateField(${i},'max',this.value)">
+            </div>
 
-.progress-bar {
-    height: 68%;
-    border-radius: 10px;
-    transition: width 0.7s ease, background-color 0.7s ease;
+            <div class="form-row">
+                <label>Portrait</label>
+                <select onchange="updateField(${i},'portrait',this.value)">
+                    ${buildPortraitOptions(char.portrait)}
+                </select>
+            </div>
 
-    margin-top: 3%;
-    max-width: 105%;
-}
+            <div class="form-row">
+                <label>Jobs</label>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
+                    ${charJobs.map((currentJob, jobIndex) => `
+                        <select onchange="updateJob(${i}, ${jobIndex}, this.value)">
+                            <option value="">-- No Class --</option>
+                            ${buildJobOptions(currentJob)}
+                        </select>
+                    `).join('')}
+                </div>
+            </div>
 
-.progress-bar.green  { background: #00d412a0 !important; }
-.progress-bar.yellow { background: #ceb10cc7 !important; }
-.progress-bar.red    { background: #ff0000a0 !important; }
-.progress-bar.grey   { background: #646464 !important; }
+            <div class="form-row" style="margin-top: 10px;">
+                <button onclick="removeCharacter(${i})" style="background: #922b21; color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; width: 100%;">Remove</button>
+            </div>
+        </div>`;
+    });
 
-.hp-text {
-    font-size: 0.9rem;
-    color: white !important;
-    text-align: center;
-    margin-top: -25px; /* Pulls the text upward directly into the progress box smoothly */
-    margin-bottom: 5px; /* Adds space before the job elements below it */
-    text-shadow: 1px 1px 2px black;
-    position: relative;
-    z-index: 20;
-}
-
-/* ---------------- JOB SYSTEM ---------------- */
-
-.job-container {
-    display: flex;
-    gap: 0px;            
-    width: 140px;        
-    height: 22px;        
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    margin-top: 8px;
+    target.innerHTML = overlay;
     
-    position: relative;
-    border-radius: 10px;
+    if (!isViewMode && forms) {
+        forms.innerHTML = editor;
+        
+        const addButtonHtml = `
+            <div style="padding: 10px 0;">
+                <button onclick="addCharacter()" style="background: #e76eff; color: #111; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-family: 'Aldrich', sans-serif; cursor: pointer; width: 100%; font-size: 0.9rem;">
+                    + Add New Character
+                </button>
+            </div>
+        `;
+        forms.insertAdjacentHTML('beforeend', addButtonHtml);
+    }
+}
+
+/* ---------------- UPDATE ---------------- */
+
+function updateOverlayOnly() {
+    partyData.forEach((char, i) => {
+        const percent = getPercent(char);
+        const color = getColor(percent);
+
+        const bar = document.getElementById("pbar-" + i);
+        const hp = document.getElementById("php-" + i);
+        const img = document.getElementById("pimg-" + i);
+        
+        // Target text boxes directly
+        const nameEl = document.getElementById("pname-" + i);
+        const pronounEl = document.getElementById("ppronouns-" + i);
+        const playerEl = document.getElementById("pplayer-" + i);
+
+        if (bar) {
+            bar.style.width = percent + "%";
+            bar.className = "progress-bar " + color;
+        }
+
+        if (hp) hp.textContent = `${char.current} / ${char.max}`;
+        if (img) img.src = char.portrait;
+        
+        // Apply fast updates directly into the active overlay text tags
+        if (nameEl) nameEl.textContent = char.name;
+        if (pronounEl) pronounEl.textContent = char.pronouns;
+        if (playerEl) playerEl.textContent = char.player;
+    });
+}
+
+function updateField(i, field, value) {
+    if (field === "current" || field === "max") {
+        value = parseInt(value);
+        if (isNaN(value)) value = 0;
+    }
+
+    partyData[i][field] = value;
+    updateOverlayOnly();
+}
+
+function updateJob(charIndex, jobIndex, newJobValue) {
+    if (!partyData[charIndex].jobs) partyData[charIndex].jobs = [];
     
-    /* THE COOKIE CUTTER MASK: 
-       This forces all child elements (the class color bars) to stay 
-       strictly inside the visible boundaries of your frame asset! */
-    -webkit-mask-image: url('HP bar 200px.webp');
-    mask-image: url('HP bar 200px.webp');
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
+    while (partyData[charIndex].jobs.length <= jobIndex) {
+        partyData[charIndex].jobs.push("");
+    }
     
-    /* Flips the mask vertically to match your layout choice */
-    transform: scaleY(-1); 
+    partyData[charIndex].jobs[jobIndex] = newJobValue;
+    partyData[charIndex].jobs = partyData[charIndex].jobs.filter(j => j !== "");
     
-    background-color: #111; 
-    z-index: 1;
+    buildUI(); 
 }
 
-/* INDIVIDUAL JOB PILL */
-.job-bar {
-    flex: 1 1 100%;      
-    min-width: 0;        
-    height: 100%;        
-    position: relative;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1; 
+function addCharacter() {
+    const newChar = {
+        name: "New Hero",
+        current: 10,
+        max: 10,
+        portrait: availablePortraits[0] || "images/placeholder.png",
+        pronouns: "they/them",
+        player: "Player Name",
+        jobs: ["wizard"]
+    };
+
+    partyData.push(newChar);
+    buildUI();
 }
 
-/* Ensure the background color maps cleanly from your JS inline styles */
-.job-bar {
-    background-color: var(--job-color, inherit); 
+function removeCharacter(i) {
+    if (confirm(`Are you sure you want to remove ${partyData[i].name || 'this character'}?`)) {
+        partyData.splice(i, 1);
+        buildUI();
+    }
 }
 
-/* THE TEXT WRAPPER 
-   We flip the text back right-side up since the parent container is flipped! */
-.job-text-span {
-    position: relative;
-    transform: scaleY(-1); /* Flips text back upright so it reads correctly */
-    z-index: 10; 
-    font-size: 9px;      
-    font-weight: bold;
-    color: inherit; 
-    white-space: nowrap;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); 
-}
+/* ---------------- INIT ---------------- */
 
-/* Wipe out any old hanging pseudo layers */
-.job-container::after,
-.job-bar::before,
-.job-bar::after {
-    display: none !important;
-}
-/* ---------------- FORM PANEL ---------------- */
-
-.control-panel h3 {
-    margin: 0 0 10px 0;
-    color: cyan;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 5px;
-}
-
-.char-form-block {
-    background: #252533;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    border-left: 4px solid #e76eff;
-}
-
-.form-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 6px;
-    align-items: center;
-}
-
-.form-row label {
-    width: 60px;
-    font-size: 0.8rem;
-    color: #ccc;
-}
-
-.control-panel input,
-.control-panel select {
-    background: #111;
-    color: #fff;
-    border: 1px solid #555;
-    padding: 3px;
-    border-radius: 4px;
-    flex-grow: 1;
-}
+window.addEventListener("DOMContentLoaded", buildUI);
