@@ -125,7 +125,7 @@ function buildUI() {
         const percent = getPercent(char);
         const color = getColor(percent);
 
-        overlay += `
+       overlay += `
         <div class="char-slot">
 
             <div class="portrait-area">
@@ -133,25 +133,21 @@ function buildUI() {
             </div>
 
             <div class="char-name">${char.name}</div>
+
             <div class="char-pronouns">${char.pronouns}</div>
 
-            <div class="job-container">
+            <div class="progress">
+                <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
+            </div>
+            <div id="php-${i}" class="hp-text">${char.current} / ${char.max}</div>
+
+            <div class="job-container" style="margin-top: 8px;">
                 ${buildJobBars(char.jobs)}
             </div>
 
             <div class="char-player">${char.player}</div>
 
-            <div class="progress">
-                <div id="pbar-${i}" class="progress-bar ${color}"
-                    style="width:${percent}%"></div>
-            </div>
-
-            <div id="php-${i}" class="hp-text">
-                ${char.current} / ${char.max}
-            </div>
-
         </div>`;
-
       editor += `
         <div class="char-form-block">
             <h3>Character: ${char.name || 'New'}</h3>
