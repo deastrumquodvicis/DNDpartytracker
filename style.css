@@ -217,10 +217,10 @@ margin-left:1px;
     width: 90%;      /* 90% Width */
     
     background-image: url('HP bar 200px.webp');
-    background-size: 120% 120%; 
+    background-size: 100% 100%; 
     background-position: center;
     background-repeat: no-repeat;
-    transform: scaleY(-1); /* Keeps your vertical flip choice */      
+    transform: scaleY(-1.2) scaleX(1.1); /* Keeps your vertical flip choice */      
     pointer-events: none;
     z-index: 1; 
 }
