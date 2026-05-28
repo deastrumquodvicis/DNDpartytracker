@@ -81,23 +81,51 @@ body {
 }
 
 .job-bar {
+
     flex: 1;
 
-    min-width: 0;
+    height: 20px;
 
-    background: #444;
+    border-radius: 8px;
 
-    border-radius: 6px;
+    background-image: url('HP bar 200px.webp');
 
-    padding: 3px 6px;
+    background-size: cover;
+    background-position: center;
 
-    font-size: 11px;
+    background-color: #666666aa;
 
-    text-align: center;
+    background-blend-mode: multiply;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     color: white;
 
-    text-transform: capitalize;
+    font-size: 11px;
+
+
+    overflow: hidden;
+}
+.job-bar.fighter {
+    background-color: #c0392baa;
+}
+
+.job-bar.wizard {
+    background-color: #7d3c98aa;
+}
+
+.job-bar.cleric {
+    background-color: #d4ac0daa;
+}
+
+.job-bar.rogue {
+    background-color: #1f618daa;
+}
+
+.job-bar.bard {
+    background-color: #16a085aa;
 }
 .class-bars-container { display: flex; gap: 4px; justify-content: center; align-items: center; width: 100%; margin-top: 5px; min-height: 20px;}
 .class-type-bar {
