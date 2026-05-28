@@ -65,7 +65,7 @@ body {
 .char-form-block { background: #252533; padding: 10px; border-radius: 6px; margin-bottom: 12px; border-left: 4px solid #e76eff; position: relative;}
 .form-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
 .form-row label { width: 50px; font-size: 0.8rem; color: #ccc; }
-.control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 4px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
+.control-panel input, .control-panel select { background: #111; color: #fff; border: 1px solid #555; padding: 2px; border-radius: 4px; flex-grow: 1; font-family: sans-serif; }
 .hp-inputs { display: flex; gap: 5px; width: 100%; }
 .hp-inputs input { width: 50px; }
 
