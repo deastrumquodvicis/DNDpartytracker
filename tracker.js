@@ -68,116 +68,128 @@ const availablePortraits = [
     "images/shaktal.png"
 ];
 
+/* ---------------- HELPERS ---------------- */
+
 function getPercent(char) {
-    if (!char.max || char.max <= 0) return 0;
+    if (!char.max) return 0;
     return Math.max(0, Math.min(100, (char.current / char.max) * 100));
 }
 
-function getColor(char, percent) {
-    if (char.current <= 0) return "grey";
+function getColor(percent) {
+    if (percent <= 0) return "grey";
     if (percent <= 10) return "red";
     if (percent <= 50) return "yellow";
     return "green";
 }
 
-function buildPortraitOptions(selected) {
-    let html = "";
-    for (let i = 0; i < availablePortraits.length; i++) {
-        const p = availablePortraits[i];
-        html += '<option value="' + p + '"' + (p === selected ? " selected" : "") + '>' + p + '</option>';
-    }
-    return html;
-}
+/* ---------------- JOB UI ---------------- */
 
 function buildJobOptions(selected) {
     let html = "";
-    for (let i = 0; i < availableJobs.length; i++) {
-        const j = availableJobs[i];
-        html += '<option value="' + j + '"' + (j === selected ? " selected" : "") + '>' + j + '</option>';
+    for (let j of availableJobs) {
+        html += `<option value="${j}" ${j === selected ? "selected" : ""}>${j}</option>`;
     }
     return html;
 }
 
-function buildJobBars(jobs) {
+function buildPortraitOptions(selected) {
     let html = "";
+    for (let p of availablePortraits) {
+        html += `<option value="${p}" ${p === selected ? "selected" : ""}>${p}</option>`;
+    }
+    return html;
+}
+
+function buildJobBars(jobs = []) {
+
     const useAbbr = jobs.length >= 3;
 
-    for (let i = 0; i < jobs.length; i++) {
-        const job = jobs[i];
-        if (!job) continue;
+    return jobs.map(job => {
 
-        const style = jobStyles[job] || { color: "#666666aa", text: "white" };
-        let label = useAbbr ? (jobAbbreviations[job] || job.slice(0,3).toUpperCase()) : job;
+        const style = jobStyles[job] || { color: "#666666aa", text: "#fff" };
+        const label = useAbbr
+            ? (jobAbbreviations[job] || job.slice(0,4).toUpperCase())
+            : job;
 
-        html +=
-            '<div class="job-bar ' + job + '" style="background-color:' +
-            style.color + ';color:' + style.text + ';">' +
-            label +
-            '</div>';
-    }
-
-    return html;
+        return `
+            <div class="job-bar ${job}" style="--job-color:${style.color}; color:${style.text}">
+                <span>${label}</span>
+            </div>
+        `;
+    }).join("");
 }
 
-/* ---------------- UI ---------------- */
+/* ---------------- RENDER ---------------- */
 
 function buildUI() {
+
     const target = document.getElementById("party-target");
     const forms = document.getElementById("forms-container");
     if (!target) return;
 
-    let overlayHTML = "";
-    let formHTML = "";
+    let overlay = "";
+    let editor = "";
 
-    for (let i = 0; i < partyData.length; i++) {
-        const char = partyData[i];
+    partyData.forEach((char, i) => {
+
         const percent = getPercent(char);
-        const color = getColor(char, percent);
+        const color = getColor(percent);
 
-        overlayHTML +=
-            '<div class="char-slot">' +
-                '<div class="portrait-area">' +
-                    '<img id="pimg-' + i + '" class="char-image" src="' + char.portrait + '">' +
-                '</div>' +
+        overlay += `
+        <div class="char-slot">
 
-                '<div class="char-name">' + char.name + '</div>' +
-                '<div class="char-pronouns">' + char.pronouns + '</div>' +
-                '<div class="job-container">' + buildJobBars(char.jobs || []) + '</div>' +
-                '<div class="char-player">' + char.player + '</div>' +
+            <div class="portrait-area">
+                <img id="pimg-${i}" class="char-image" src="${char.portrait}">
+            </div>
 
-                '<div class="progress">' +
-                    '<div id="pbar-' + i + '" class="progress-bar ' + color + '" style="width:' + percent + '%"></div>' +
-                '</div>' +
+            <div class="char-name">${char.name}</div>
+            <div class="char-pronouns">${char.pronouns}</div>
 
-                '<div id="php-' + i + '" class="hp-text">' +
-                    char.current + ' / ' + char.max +
-                '</div>' +
-            '</div>';
+            <div class="job-container">
+                ${buildJobBars(char.jobs)}
+            </div>
 
-        formHTML +=
-            '<div class="char-form-block">' +
-                '<input value="' + char.name + '" oninput="updateField(' + i + ', \'name\', this.value)">' +
-                '<input value="' + char.pronouns + '" oninput="updateField(' + i + ', \'pronouns\', this.value)">' +
-                '<input value="' + char.player + '" oninput="updateField(' + i + ', \'player\', this.value)">' +
+            <div class="char-player">${char.player}</div>
 
-                '<input type="number" value="' + char.current + '" oninput="updateField(' + i + ', \'current\', this.value)">' +
-                '<input type="number" value="' + char.max + '" oninput="updateField(' + i + ', \'max\', this.value)">' +
+            <div class="progress">
+                <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
+            </div>
 
-                '<select onchange="updateField(' + i + ', \'portrait\', this.value)">' +
-                    buildPortraitOptions(char.portrait) +
-                '</select>' +
-            '</div>';
-    }
+            <div id="php-${i}" class="hp-text">
+                ${char.current} / ${char.max}
+            </div>
 
-    target.innerHTML = overlayHTML;
-    if (!isViewMode && forms) forms.innerHTML = formHTML;
+        </div>`;
+
+        editor += `
+        <div class="char-form-block">
+
+            <input value="${char.name}" oninput="updateField(${i}, 'name', this.value)">
+            <input value="${char.pronouns}" oninput="updateField(${i}, 'pronouns', this.value)">
+            <input value="${char.player}" oninput="updateField(${i}, 'player', this.value)">
+
+            <input type="number" value="${char.current}" oninput="updateField(${i}, 'current', this.value)">
+            <input type="number" value="${char.max}" oninput="updateField(${i}, 'max', this.value)">
+
+            <select onchange="updateField(${i}, 'portrait', this.value)">
+                ${buildPortraitOptions(char.portrait)}
+            </select>
+
+        </div>`;
+    });
+
+    target.innerHTML = overlay;
+    if (!isViewMode && forms) forms.innerHTML = editor;
 }
 
+/* ---------------- UPDATE ---------------- */
+
 function updateOverlayOnly() {
-    for (let i = 0; i < partyData.length; i++) {
-        const char = partyData[i];
+
+    partyData.forEach((char, i) => {
+
         const percent = getPercent(char);
-        const color = getColor(char, percent);
+        const color = getColor(percent);
 
         const bar = document.getElementById("pbar-" + i);
         const hp = document.getElementById("php-" + i);
@@ -188,21 +200,23 @@ function updateOverlayOnly() {
             bar.className = "progress-bar " + color;
         }
 
-        if (hp) hp.textContent = char.current + " / " + char.max;
+        if (hp) hp.textContent = `${char.current} / ${char.max}`;
         if (img) img.src = char.portrait;
-    }
+    });
 }
 
-function updateField(index, field, value) {
+function updateField(i, field, value) {
+
     if (field === "current" || field === "max") {
         value = parseInt(value);
         if (isNaN(value)) value = 0;
     }
 
-    partyData[index][field] = value;
+    partyData[i][field] = value;
+
     updateOverlayOnly();
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    buildUI();
-});
+/* ---------------- INIT ---------------- */
+
+window.addEventListener("DOMContentLoaded", buildUI);
