@@ -23,63 +23,64 @@ function buildUI() {
     let overlayHTML = '';
     let formHTML = '';
 
-    partyData.forEach((char, index) => {
+    for (let index = 0; index < partyData.length; index++) {
 
-        const percent =
-            char.max > 0
-                ? (char.current / char.max) * 100
-                : 0;
+        const char = partyData[index];
 
-        overlayHTML += `
-            <div class="char-slot">
+        let percent = 0;
 
-                <div class="char-name">
-                    ${char.name}
-                </div>
+        if (char.max > 0) {
+            percent = (char.current / char.max) * 100;
+        }
 
-                <div class="progress">
-                    <div
-                        class="progress-bar green"
-                        style="width:${percent}%"
-                    ></div>
-                </div>
+        // -------------------------
+        // OVERLAY (STREAM VIEW)
+        // -------------------------
 
-                <div class="hp-text">
-                    ${char.current} / ${char.max}
-                </div>
+        overlayHTML +=
+            '<div class="char-slot">' +
 
-            </div>
-        `;
+                '<div class="char-name">' +
+                    char.name +
+                '</div>' +
 
-        formHTML += `
-            <div class="char-form-block">
+                '<div class="progress">' +
+                    '<div class="progress-bar green" style="width:' + percent + '%"></div>' +
+                '</div>' +
 
-                <div class="form-row">
+                '<div class="hp-text">' +
+                    char.current + ' / ' + char.max +
+                '</div>' +
 
-                    <label>Name</label>
+            '</div>';
 
-                    <input
-                        value="${char.name}"
-                        oninput="updateField(${index}, 'name', this.value)"
-                    >
+        // -------------------------
+        // EDITOR FORM
+        // -------------------------
 
-                </div>
+        formHTML +=
+            '<div class="char-form-block">' +
 
-                <div class="form-row">
+                '<div class="form-row">' +
+                    '<label>Name</label>' +
+                    '<input value="' + char.name + '" ' +
+                        'oninput="updateField(' + index + ', \'name\', this.value)">' +
+                '</div>' +
 
-                    <label>HP</label>
+                '<div class="form-row">' +
+                    '<label>HP</label>' +
+                    '<input type="number" value="' + char.current + '" ' +
+                        'oninput="updateField(' + index + ', \'current\', this.value)">' +
+                '</div>' +
 
-                    <input
-                        type="number"
-                        value="${char.current}"
-                        oninput="updateField(${index}, 'current', this.value)"
-                    >
+                '<div class="form-row">' +
+                    '<label>Max</label>' +
+                    '<input type="number" value="' + char.max + '" ' +
+                        'oninput="updateField(' + index + ', \'max\', this.value)">' +
+                '</div>' +
 
-                </div>
-
-            </div>
-        `;
-    });
+            '</div>';
+    }
 
     target.innerHTML = overlayHTML;
 
@@ -87,7 +88,6 @@ function buildUI() {
         forms.innerHTML = formHTML;
     }
 }
-
 function updateField(index, field, value) {
 
     if (field === 'current') {
