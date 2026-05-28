@@ -181,25 +181,23 @@ body {
 }
 
 /* MAIN JOB BAR */
+/* MAIN JOB BAR */
 .job-bar {
-    flex: 1 1 auto;
+    flex: 1 1 0px; /* Forces equal distribution horizontally */
+    width: 0;      /* Prevents text length from making one class bigger than the other */
     min-width: 55px;
     height: 22px;
-
     border-radius: 8px;
-
     position: relative;
     overflow: hidden;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 10px;
     font-weight: bold;
-
     white-space: nowrap;
     padding: 0 4px;
+    z-index: 1; /* Establishes a stacking context */
 }
 
 /* background texture layer */
@@ -207,25 +205,24 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-
     background-image: url('HP bar 200px.webp');
-    background-size: cover;
+    background-size: 100% 100%; /* Forces the texture to match the exact dimensions of the pill stretched flat */
     background-position: center;
-
-    z-index: 0;
+    background-repeat: no-repeat;
+    z-index: -2; /* Sends texture to the very back */
 }
 
-/* tint layer (from JS variable) */
+/* tint layer */
 .job-bar::after {
     content: "";
     position: absolute;
     inset: 0;
-
-    background-color: var(--job-color, #666);
+    background-color: inherit; /* Inherits the background color injected by your JS style script */
     opacity: 0.65;
-
-    z-index: 1;
+    z-index: -1; /* Sits directly over the texture but underneath the text span */
 }
+
+
 
 .job-bar span {
     position: relative;
