@@ -171,28 +171,48 @@ body {
 
 /* ---------------- JOB SYSTEM ---------------- */
 
+/* ---------------- JOB SYSTEM ---------------- */
+
 .job-container {
     display: flex;
-    gap: 4px;
-    width: 140px; /* Locks container to the exact width of the character slot */
+    gap: 0px;            /* Locked to 0 so the pills blend seamlessly inside the master frame */
+    width: 140px;        
+    height: 22px;        /* Strict vertical lock */
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
     margin-top: 8px;
+    
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;    /* Clips the inner color blocks perfectly to a pill shape */
+    z-index: 1;
 }
 
-/* MAIN JOB BAR */
+/* MASTER FRAME LAYER 
+   This overlays the inner ring details on top of the dynamic color bars seamlessly */
+.job-container::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('HP bar 200px.webp');
+    background-size: 100% 100%; /* Stretches the frame perfectly regardless of 1, 2, or 3 classes */
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scaleY(-1);       /* Keeps your vertical flip choice intact */
+    pointer-events: none;        /* Ensures you can still click menus behind it if needed */
+    z-index: 3;                  /* Sits directly on top of the text and colors to frame them */
+    mix-blend-mode: screen;      /* Lets the bright inner rings pop while blending background shadows */
+    opacity: 0.85;
+}
+
+/* INDIVIDUAL JOB PILL */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 22px;        
-    
-    /* CHANGE THIS: Set to 10px to perfectly match the progress-bar pill rounding */
-    border-radius: 10px; 
-    
+    height: 100%;        
     position: relative;
-    overflow: hidden;
-
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -204,37 +224,19 @@ body {
     z-index: 1;
 }
 
-/* background texture layer */
-.job-bar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    background-image: url('HP bar 200px.webp');
-    background-size: auto 22px; 
-    background-position: center;
-    background-repeat: no-repeat;
-    transform: scaleY(-1); 
-
-    z-index: -2;
-}
-
-/* tint layer */
+/* Dynamic Opacity Layer for individual blocks */
 .job-bar::after {
     content: "";
     position: absolute;
     inset: 0;
     background-color: inherit; 
-    opacity: 0.65;
-    
-    /* MATCH THIS TOO: Inherits the 10px rounding from the parent container */
-    border-radius: inherit; 
-    
+    opacity: 0.75;               /* Gives the flat color block some transparency */
     z-index: -1;
 }
-.job-bar span {
-    position: relative;
-    z-index: 2;
+
+/* Remove the old isolated background layers that were clipping */
+.job-bar::before {
+    display: none;
 }
 /* ---------------- FORM PANEL ---------------- */
 
