@@ -1,52 +1,30 @@
 html, body {
     width: 100%;
     height: 100%;
-    padding: 0;
     margin: 0;
+    padding: 0;
     background: transparent !important;
     font-family: 'Aldrich', sans-serif;
     overflow: hidden;
 }
 
-* {
-    box-sizing: border-box;
-}
-
-/* -----------------------
-   LAYOUT
------------------------- */
-
 .master-container {
     display: flex;
     width: 100%;
     height: 100vh;
-    position: relative;
 }
 
 .control-panel {
     width: 380px;
     background: #1a1a24;
-    color: #fff;
+    color: white;
     padding: 15px;
     overflow-y: auto;
-    border-right: 3px solid #333;
-    z-index: 999;
 }
 
 .control-panel.hidden {
     display: none !important;
 }
-
-.stream-overlay-area {
-    flex-grow: 1;
-    background: transparent;
-    position: relative;
-    overflow: hidden;
-}
-
-/* -----------------------
-   PARTY GRID
------------------------- */
 
 .party-container {
     display: flex;
@@ -54,25 +32,18 @@ html, body {
     justify-content: center;
     gap: 15px;
     padding: 20px;
-    align-items: flex-start;
-    width: 100%;
 }
 
-/* -----------------------
-   CHARACTER CARD
------------------------- */
+/* ---------------- CHARACTER ---------------- */
 
 .char-slot {
     width: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 10px;
 }
 
-/* -----------------------
-   PORTRAIT
------------------------- */
+/* ---------------- PORTRAIT ---------------- */
 
 .portrait-area {
     width: 140px;
@@ -80,8 +51,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 6px;
-    position: relative;
 }
 
 .char-image {
@@ -90,169 +59,91 @@ html, body {
     object-fit: contain;
 }
 
-/* -----------------------
-   TEXT FIELDS
------------------------- */
-
-.char-name {
-    font-size: 1.5rem;
-    color: rgb(0, 255, 255) !important;
-    text-align: center;
-    margin-top: 4px;
-    text-shadow:
-        2px 0 2px rgba(0,0,0,0.6),
-        -2px 0 2px rgba(0,0,0,0.6),
-        0 2px 2px rgba(0,0,0,0.6),
-        0 -2px 2px rgba(0,0,0,0.6);
-}
-
-.char-pronouns {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #afafff !important;
-    text-align: center;
-    margin-top: 2px;
-}
-
-.char-player {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #f103bb !important;
-    text-align: center;
-    margin-top: 2px;
-}
-
-/* -----------------------
-   JOBS
------------------------- */
+/* ---------------- JOB BARS ---------------- */
 
 .job-container {
     display: flex;
     gap: 4px;
     width: 100%;
     justify-content: center;
-    align-items: center;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .job-bar {
     flex: 1;
-    min-width: 0;
     height: 20px;
     border-radius: 8px;
 
+    position: relative;
+    overflow: hidden;
+
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
     font-size: 10px;
     font-weight: bold;
 
-    white-space: nowrap;
-    overflow: hidden;
-
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-}
-
-/* -----------------------
-   HP BAR
------------------------- */
-
-.progress {
-    width: 100%;
-    height: 32px;
-    margin-top: -10px;
-
-    background-image: url('HP%20bar%20200px.webp');
-    background-size: contain;
-    background-repeat: no-repeat;
+    background-image: url('HP bar 200px.webp');
+    background-size: cover;
     background-position: center;
 }
 
-.progress-bar {
-    height: 68%;
-    border-radius: 10px;
-    transition: width 0.3s ease, background-color 0.3s ease;
+/* tint layer */
+.job-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--job-color);
+    opacity: 0.65;
 }
 
-/* colors */
-.progress-bar.green { background: #00d412a0 !important; }
-.progress-bar.yellow { background: #ceb10cc7 !important; }
-.progress-bar.red { background: #ff0000a0 !important; }
-.progress-bar.grey { background: #646464 !important; }
+.job-bar span {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------------- TEXT ---------------- */
+
+.char-name {
+    color: cyan;
+    font-size: 18px;
+}
+
+.char-pronouns {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.char-player {
+    font-size: 12px;
+    color: #f0f;
+}
+
+/* ---------------- HP BAR ---------------- */
+
+.progress {
+    width: 100%;
+    height: 28px;
+    margin-top: 5px;
+    background: url('HP bar 200px.webp');
+    background-size: cover;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 0.2s ease;
+}
+
+.progress-bar.green { background: #00d412aa; }
+.progress-bar.yellow { background: #ceb10caa; }
+.progress-bar.red { background: #ff0000aa; }
+.progress-bar.grey { background: #666; }
 
 .hp-text {
-    font-size: 0.9rem;
-    color: white !important;
-    text-align: center;
     margin-top: -22px;
+    text-align: center;
+    font-size: 12px;
+    color: white;
     text-shadow: 1px 1px 2px black;
 }
-
-/* -----------------------
-   CONTROL PANEL
------------------------- */
-
-.control-panel h3 {
-    margin: 0 0 10px 0;
-    color: cyan;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 5px;
-}
-
-.char-form-block {
-    background: #252533;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    border-left: 4px solid #e76eff;
-}
-
-.form-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 6px;
-    align-items: center;
-}
-
-.form-row label {
-    width: 70px;
-    font-size: 0.8rem;
-    color: #ccc;
-}
-
-.control-panel input,
-.control-panel select {
-    background: #111;
-    color: #fff;
-    border: 1px solid #555;
-    padding: 4px;
-    border-radius: 4px;
-    flex-grow: 1;
-}
-
-/* -----------------------
-   BUTTONS
------------------------- */
-
-.global-controls {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px dashed #444;
-    display: flex;
-    gap: 5px;
-}
-
-.btn {
-    width: 100%;
-    padding: 8px;
-    font-weight: bold;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-add { background: #00d412; color: white; }
-.btn-toggle { background: #44445c; color: white; width: auto !important; }
-.btn-remove { background: #ff3333; color: white; margin-top: 10px; font-size: 0.75rem; }
