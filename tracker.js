@@ -1,6 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const isViewMode = urlParams.get("mode") === "view";
 
+// Hardcoded default values to fall back on if localStorage is empty
 let partyData = [
     {
         name: "Dea",
@@ -105,7 +106,7 @@ const availablePortraits = [
     "images/shaktal.png"
 ];
 
-/* ---------------- HELPERS ---------------- */
+/* ---------------- HELPERS & PERSISTENCE ---------------- */
 
 function getPercent(char) {
     if (!char.max || char.max <= 0) return 0;
@@ -117,6 +118,23 @@ function getColor(percent) {
     if (percent <= 10) return "red";
     if (percent <= 50) return "yellow";
     return "green";
+}
+
+// Commits your array state to the local environment cache storage
+function saveTrackerState() {
+    localStorage.setItem("streamPartyTrackerData", JSON.stringify(partyData));
+}
+
+// Retrieves data cleanly on startup initialization step
+function loadTrackerState() {
+    const cachedData = localStorage.getItem("streamPartyTrackerData");
+    if (cachedData) {
+        try {
+            partyData = JSON.parse(cachedData);
+        } catch (e) {
+            console.error("Failed to parse cached data structural layout string:", e);
+        }
+    }
 }
 
 /* ---------------- BUILDERS ---------------- */
@@ -164,7 +182,6 @@ function buildUI() {
         const percent = getPercent(char);
         const color = getColor(percent);
 
-        // Dynamic status verification during compilation template loop
         const isDeadClass = char.current <= 0 ? "dead-portrait" : "";
 
        overlay += `
@@ -291,8 +308,6 @@ function updateOverlayOnly() {
         if (img) {
             img.src = char.portrait;
             
-            /* FIXED: Live check to apply or remove the greyscale effect 
-               the exact moment HP hits 0 or goes back up in the panel! */
             if (char.current <= 0) {
                 img.classList.add("dead-portrait");
             } else {
@@ -314,6 +329,7 @@ function updateField(i, field, value) {
 
     partyData[i][field] = value;
     updateOverlayOnly();
+    saveTrackerState(); // Saves individual data adjustments instantly
 }
 
 function updateJob(charIndex, jobIndex, newJobValue) {
@@ -327,6 +343,7 @@ function updateJob(charIndex, jobIndex, newJobValue) {
     partyData[charIndex].jobs = partyData[charIndex].jobs.filter(j => j !== "");
     
     buildUI(); 
+    saveTrackerState(); // Saves newly formatted multi-class configuration changes
 }
 
 function addCharacter() {
@@ -342,15 +359,31 @@ function addCharacter() {
 
     partyData.push(newChar);
     buildUI();
+    saveTrackerState(); // Stores newly integrated rows safely inside memory
 }
 
 function removeCharacter(i) {
     if (confirm(`Are you sure you want to remove ${partyData[i].name || 'this character'}?`)) {
         partyData.splice(i, 1);
         buildUI();
+        saveTrackerState(); // Locks in array mutations upon row deletion clicks
     }
 }
 
-/* ---------------- INIT ---------------- */
+/* ---------------- INIT & HOTKEYS ---------------- */
 
-window.addEventListener("DOMContentLoaded", buildUI);
+// Setup sequence handles system cache checks directly on wake up
+function initTracker() {
+    loadTrackerState();
+    buildUI();
+}
+
+// Emergency clearance listener handler: Press Alt + Shift + R to force factory clear cache states
+window.addEventListener("keydown", (e) => {
+    if (e.altKey && e.shiftKey && e.key.toLowerCase() === "r") {
+        localStorage.removeItem("streamPartyTrackerData");
+        window.location.reload();
+    }
+});
+
+window.addEventListener("DOMContentLoaded", initTracker);
