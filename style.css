@@ -176,11 +176,11 @@ margin-left:1px;
 @keyframes jobBrandGlowSync {
     0%, 100% {
         border-color: #F103BB; /* --brand-pink */
-        box-shadow: 0 0 10px #F103BB;
+        box-shadow: 0 0 4px #F103BB;
     }
     50% {
         border-color: #03F1EE; /* --brand-cyan */
-        box-shadow: 0 0 10px #03F1EE;
+        box-shadow: 0 0 4px #03F1EE;
     }
 }
 
