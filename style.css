@@ -168,12 +168,26 @@ margin-left:1px;
     z-index: 20;
 }
 
-/* ---------------- JOB SYSTEM ---------------- */
+/* ==========================================================================
+   JOB SYSTEM - PURE CSS SYNCHRONIZED BRAND NEON CAPSULES
+   ========================================================================== */
 
-/* THE TRACK CONTROLLER */
+/* 1. KEYFRAME ANIMATIONS (Ported directly from your Gym Badge System) */
+@keyframes jobBrandGlowSync {
+    0%, 100% {
+        border-color: #F103BB; /* --brand-pink */
+        box-shadow: 0 0 8px #F103BB;
+    }
+    50% {
+        border-color: #03F1EE; /* --brand-cyan */
+        box-shadow: 0 0 8px #03F1EE;
+    }
+}
+
+/* 2. THE TRACK CONTROLLER: Outlines the parent row container width */
 .job-container {
     display: flex;
-    gap: 0px;            
+    gap: 4px; /* Clean, consistent spacing between multiclass capsules */           
     width: 140px;        
     height: 22px;        
     justify-content: center;
@@ -183,15 +197,15 @@ margin-left:1px;
     position: relative;
     z-index: 1;
     
-    overflow: visible;    
+    overflow: visible; /* Allows the neon shadows to cast outward without clipping */   
     background-color: transparent; 
 }
 
-/* THE FLEX POSITIONER CELL */
+/* 3. THE FLEX POSITIONER CELL (The Core Neon Badge Shape) */
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 100%;        
+    height: 65%; /* Constrains the vertical capsule profile to exactly 65% */       
     position: relative;
     
     display: flex;
@@ -200,51 +214,39 @@ margin-left:1px;
     background-color: transparent !important; 
     z-index: 2; 
 
-    /* FIXED: This negative margin pulls the individual multiclass capsules 
-       closer together. Adjust from -4px to -2px or -6px if you want to fine-tune 
-       the gap distance perfectly! */
-    margin: 0 -4px; 
-}
-
-/* 1. THE PILL NEON BACKPLATE */
-.job-bar::before {
-    content: "";
-    position: absolute;
-
-    top: 17.5%;      
-    height: 65%;     
-    left: 5%;        
-    width: 90%;      
+    /* Structural capsule styling */
+    border-radius: 50px;
+    border: 1px solid #F103BB; 
     
-    background-image: url('HP bar 200px.webp');
-    background-size: 100% 100%; 
-    background-position: center;
-    background-repeat: no-repeat;
-    transform: scaleY(-1.5) scaleX(1);     
-    pointer-events: none;
-    z-index: 1; 
+    /* Synchronized brand color rotation loop */
+    animation: jobBrandGlowSync 60s ease-in-out infinite;
+    
+    /* Clean, deep metallic gradient plate base layer under your colors */
+    background: linear-gradient(135deg, #1c1a22 0%, #120e1a 100%);
 }
 
-/* 2. THE PILL COLOR CHIP */
+/* 4. THE INNER PILL COLOR CHIP (Sits perfectly inside the animated border) */
 .job-bar::after {
     content: "";
     position: absolute;
     
-    /* FIXED: Using matching absolute pixel parameters to keep the color 
-       fill perfectly centered inside the capsule across all splits. */
-    top: 22%;
-    bottom: 22%;
-    left: 7px;     
-    right: 7px;    
+    /* Uniform 1.5px layout inset boundary from the rotating border edge */
+    top: 1.5px;
+    bottom: 1.5px;
+    left: 1.5px;
+    right: 1.5px;
     
+    /* Pulls your transparent color tracking strings directly from your JS data */
     background-color: var(--job-color, inherit); 
-    border-radius: 10px; 
+    
+    /* Matches the capsule curvature curve perfectly */
+    border-radius: 50px; 
     
     pointer-events: none;
-    z-index: 2; 
+    z-index: -1; 
 }
 
-/* 3. THE TEXT WRAPPER */
+/* 5. THE TEXT WRAPPER (Preserves your custom formatting rules cleanly) */
 .job-text-span {
     position: relative;
     z-index: 10; 
@@ -254,6 +256,12 @@ margin-left:1px;
     color: inherit; 
     white-space: nowrap;
     
+    /* REMOVED: Text shadow block deleted per your spec to maintain clean typography styling */
+}
+
+/* Clean up remnants of older styling rules */
+.job-bar::before {
+    display: none !important;
 }
 /* ---------------- FORM PANEL ---------------- */
 
