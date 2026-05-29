@@ -184,7 +184,7 @@ margin-left:1px;
     }
 }
 
-/* Dynamic reflection animation loop */
+/* Drifts the lightning wave smoothly across the bar */
 @keyframes sheenRotation {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -212,7 +212,7 @@ margin-left:1px;
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 75%; /* Substantial capsule thickness */       
+    height: 75%;        
     position: relative;
     
     display: flex;
@@ -224,30 +224,31 @@ margin-left:1px;
     border: 1px solid #F103BB; 
     background-color: transparent !important;
     
-    /* Synchronized brand color rotation loop */
     animation: jobBrandGlowSync 60s ease-in-out infinite;
 }
 
-/* 4. THE INNER PILL COLOR CHIP + METALLIC SHADOW OVERLAY */
+/* 4. THE INNER PILL COLOR CHIP + TRANSPARENT LIGHTING WAVE OVERLAY */
 .job-bar::after {
     content: "";
     position: absolute;
-    
-    /* FIXED: Set to 0px to pull the color fill flush against the neon border.
-       This completely removes the anti-aliasing white seam or layout gaps! */
     top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
     
-    /* FIXED: Swapped out #ffffff for a low-transparency #ababab to #545454 split.
-       This creates a rich, metallic dark sheen without muddying or bleaching out your base colors. */
+    /* TARGETED FIX: Pure transparent wave mapping. 
+       Uses ultra-low opacities so your base job colors are never washed out or grayed. */
     background: 
-        linear-gradient(135deg, rgba(171, 171, 171, 0.4) 0%, rgba(84, 84, 84, 0.25) 50%, rgba(0, 0, 0, 0.4) 100%),
+        linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15) 0%,   /* Step 1: A tiny bit lighter */
+            rgba(255, 255, 255, 0) 35%,    /* Step 2: Color as-is (fully transparent) */
+            rgba(0, 0, 0, 0.2) 70%,        /* Step 3: A tiny bit darker */
+            rgba(255, 255, 255, 0) 100%    /* Step 4: Back to color as-is */
+        ),
         var(--job-color, #120e1a);
     
     background-size: 200% 200%;
-    animation: sheenRotation 10s ease-in-out infinite; /* Slightly slowed down for a smoother drift */
+    animation: sheenRotation 12s ease-in-out infinite; /* Smooth, steady lighting drift */
     
     border-radius: 50px; 
     pointer-events: none;
@@ -259,6 +260,7 @@ margin-left:1px;
     position: relative;
     z-index: 10; 
     
+    font-family: 'Aldrich', sans-serif; /* Tied into your gym badge font family choice */
     font-size: 9px;      
     font-weight: bold;
     color: inherit; 
