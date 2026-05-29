@@ -28,26 +28,26 @@ const availableJobs = [
 ];
 
 const jobStyles = {
-    barbarian: { color: "#F4641Cbb", text: "white" },
-    bard: { color: "#F9B8E6bb", text: "black" },
-    cleric: { color: "#BFBFBFbb", text: "black" },
-    druid: { color: "#31B32Bbb", text: "white" },
-    fighter: { color: "#753E1Dbb", text: "white" },
-    monk: { color: "#93BEFFbb", text: "black" },
-    paladin: { color: "#f7dc6fbb", text: "black" },
-    ranger: { color: "#376A0Ebb", text: "white" },
-    rogue: { color: "#08080888", text: "white" },
-    sorcerer: { color: "#D91A1Abb", text: "white" },
-    warlock: { color: "#8629B3bb", text: "white" },
-    artificer: { color: "#B69A1Abb", text: "white" },
-    pugilist: { color: "#21B09Bbb", text: "white" },
-    gunslinger: { color: "#C79C7Fbb", text: "white" },
-    bloodhunter: { color: "#7E0100bb", text: "white" },
-    witch: { color: "#FF40F2bb", text: "white" },
-    theurge: { color: "#2CFFF8bb", text: "black" },
-    sidekick: { color: "#808080bb", text: "white" },
-    "⸻": { color: "#808080dd", text: "white" },
-    wizard: { color: "#1E87E6bb", text: "white" }
+    barbarian: { color: "#F4641C", text: "black" },
+    bard: { color: "#F9B8E6", text: "black" },
+    cleric: { color: "#BFBFBF", text: "black" },
+    druid: { color: "#31B32B", text: "white" },
+    fighter: { color: "#753E1D", text: "white" },
+    monk: { color: "#93BEFF", text: "black" },
+    paladin: { color: "#f7dc6f", text: "black" },
+    ranger: { color: "#376A0E", text: "white" },
+    rogue: { color: "#080808", text: "white" },
+    sorcerer: { color: "#D91A1A", text: "white" },
+    warlock: { color: "#8629B3", text: "white" },
+    artificer: { color: "#B69A1A", text: "black" },
+    pugilist: { color: "#21B09B", text: "white" },
+    gunslinger: { color: "#C79C7F", text: "white" },
+    bloodhunter: { color: "#7E0100", text: "white" },
+    witch: { color: "#FF40F2", text: "white" },
+    theurge: { color: "#2CFFF8", text: "black" },
+    sidekick: { color: "#808080", text: "white" },
+    "⸻": { color: "#808080", text: "white" },
+    wizard: { color: "#1E87E6", text: "white" }
 };
 
 const jobFullLabels = {
