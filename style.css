@@ -172,22 +172,29 @@ margin-left:1px;
    JOB SYSTEM - PURE CSS SYNCHRONIZED BRAND NEON CAPSULES
    ========================================================================== */
 
-/* 1. KEYFRAME ANIMATIONS (Ported directly from your Gym Badge System) */
+/* 1. KEYFRAME ANIMATIONS */
 @keyframes jobBrandGlowSync {
     0%, 100% {
         border-color: #F103BB; /* --brand-pink */
-        box-shadow: 0 0 8px #F103BB;
+        box-shadow: 0 0 10px #F103BB;
     }
     50% {
         border-color: #03F1EE; /* --brand-cyan */
-        box-shadow: 0 0 8px #03F1EE;
+        box-shadow: 0 0 10px #03F1EE;
     }
 }
 
-/* 2. THE TRACK CONTROLLER: Outlines the parent row container width */
+/* Slowly rotates the overlay sheen to give the color pills a dynamic, metallic reflection */
+@keyframes sheenRotation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 2. THE TRACK CONTROLLER */
 .job-container {
     display: flex;
-    gap: 4px; /* Clean, consistent spacing between multiclass capsules */           
+    gap: 4px;            
     width: 140px;        
     height: 22px;        
     justify-content: center;
@@ -197,7 +204,7 @@ margin-left:1px;
     position: relative;
     z-index: 1;
     
-    overflow: visible; /* Allows the neon shadows to cast outward without clipping */   
+    overflow: visible;   
     background-color: transparent; 
 }
 
@@ -205,48 +212,55 @@ margin-left:1px;
 .job-bar {
     flex: 1 1 100%;      
     min-width: 0;        
-    height: 65%; /* Constrains the vertical capsule profile to exactly 65% */       
+    
+    /* TARGETED FIX: Increased height from 65% to 75% to make the bars look more substantial */
+    height: 75%;        
     position: relative;
     
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: transparent !important; 
     z-index: 2; 
 
     /* Structural capsule styling */
     border-radius: 50px;
+    
+    /* REMOVED: Stripped out old borders/backgrounds to eliminate the weird black edge line */
     border: 1px solid #F103BB; 
+    background-color: transparent !important;
     
     /* Synchronized brand color rotation loop */
     animation: jobBrandGlowSync 60s ease-in-out infinite;
-    
-    /* Clean, deep metallic gradient plate base layer under your colors */
-    background: linear-gradient(135deg, #1c1a22 0%, #120e1a 100%);
 }
 
-/* 4. THE INNER PILL COLOR CHIP (Sits perfectly inside the animated border) */
+/* 4. THE INNER PILL COLOR CHIP + DYNAMIC ROTATING GRADIENT OVERLAY */
 .job-bar::after {
     content: "";
     position: absolute;
     
-    /* Uniform 1.5px layout inset boundary from the rotating border edge */
-    top: 1.5px;
-    bottom: 1.5px;
-    left: 1.5px;
-    right: 1.5px;
+    /* Insets the color pill cleanly inside your glowing neon borders */
+    top: 1px;
+    bottom: 1px;
+    left: 1px;
+    right: 1px;
     
-    /* Pulls your transparent color tracking strings directly from your JS data */
-    background-color: var(--job-color, inherit); 
+    /* TARGETED FIX: Multi-layered background engine. 
+       - Layer 1 (Top): Your requested moving #ffffff to #cccccc gradient overlay.
+       - Layer 2 (Bottom): Your dynamic JS job colors acting as the solid base. */
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(204, 204, 204, 0.2) 50%, rgba(0, 0, 0, 0.15) 100%),
+        var(--job-color, #120e1a);
     
-    /* Matches the capsule curvature curve perfectly */
+    /* Scales up the gradient asset size so it has room to smoothly drift/rotate */
+    background-size: 200% 200%;
+    animation: sheenRotation 8s ease-in-out infinite;
+    
     border-radius: 50px; 
-    
     pointer-events: none;
     z-index: -1; 
 }
 
-/* 5. THE TEXT WRAPPER (Preserves your custom formatting rules cleanly) */
+/* 5. THE TEXT WRAPPER */
 .job-text-span {
     position: relative;
     z-index: 10; 
@@ -255,11 +269,9 @@ margin-left:1px;
     font-weight: bold;
     color: inherit; 
     white-space: nowrap;
-    
-    /* REMOVED: Text shadow block deleted per your spec to maintain clean typography styling */
 }
 
-/* Clean up remnants of older styling rules */
+/* Housekeeping rule to drop unneeded layers */
 .job-bar::before {
     display: none !important;
 }
