@@ -1,7 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const isViewMode = urlParams.get("mode") === "view";
 
-// Hardcoded default values to fall back on if localStorage is empty
+// Hardcoded default values to fall back on if storage is empty
 let partyData = [
     {
         name: "Dea",
@@ -106,7 +106,7 @@ const availablePortraits = [
     "images/shaktal.png"
 ];
 
-/* ---------------- HELPERS & PERSISTENCE ---------------- */
+/* ---------------- HELPERS & DATA SYNC ENGINE ---------------- */
 
 function getPercent(char) {
     if (!char.max || char.max <= 0) return 0;
@@ -120,20 +120,45 @@ function getColor(percent) {
     return "green";
 }
 
-// Commits your array state to the local environment cache storage
 function saveTrackerState() {
-    localStorage.setItem("streamPartyTrackerData", JSON.stringify(partyData));
+    try {
+        localStorage.setItem("streamPartyTrackerData", JSON.stringify(partyData));
+    } catch(e) {
+        console.error("Storage write blocked by browser configuration settings:", e);
+    }
 }
 
-// Retrieves data cleanly on startup initialization step
 function loadTrackerState() {
     const cachedData = localStorage.getItem("streamPartyTrackerData");
     if (cachedData) {
         try {
             partyData = JSON.parse(cachedData);
         } catch (e) {
-            console.error("Failed to parse cached data structural layout string:", e);
+            console.error("Failed to parse cached structural database layout data:", e);
         }
+    }
+}
+
+// FAILSAFE SYSTEM: Lets you copy data out manually if OBS splits the cache contexts
+function copyStateToClipboard() {
+    const dataString = JSON.stringify(partyData);
+    navigator.clipboard.writeText(dataString).then(() => {
+        alert("Party configuration string copied to clipboard! You can save this text as a fallback backup layout.");
+    }).catch(err => {
+        // Fallback alert if clipboard api is blocked in view container scripts
+        alert("Copy string manual value:\n\n" + dataString);
+    });
+}
+
+function importStateFromString() {
+    const input = prompt("Paste your saved party layout configuration data string here:");
+    if (!input) return;
+    try {
+        partyData = JSON.parse(input);
+        saveTrackerState();
+        buildUI();
+    } catch (e) {
+        alert("Invalid layout data signature. Check string variables and try again.");
     }
 }
 
@@ -181,31 +206,23 @@ function buildUI() {
     partyData.forEach((char, i) => {
         const percent = getPercent(char);
         const color = getColor(percent);
-
         const isDeadClass = char.current <= 0 ? "dead-portrait" : "";
 
        overlay += `
         <div class="char-slot">
-
             <div class="portrait-area">
                 <img id="pimg-${i}" class="char-image ${isDeadClass}" src="${char.portrait}">
             </div>
-
             <div class="char-name" id="pname-${i}">${char.name}</div>
-
             <div class="char-pronouns" id="ppronouns-${i}">${char.pronouns}</div>
-
             <div class="progress">
                 <div id="pbar-${i}" class="progress-bar ${color}" style="width:${percent}%"></div>
             </div>
             <div id="php-${i}" class="hp-text">${char.current} / ${char.max}</div>
-
             <div class="job-container" style="margin-top: 8px;">
                 ${buildJobBars(char.jobs)}
             </div>
-
             <div class="char-player" id="pplayer-${i}">${char.player}</div>
-
         </div>`;
 
         const charJobs = [...char.jobs];
@@ -216,39 +233,15 @@ function buildUI() {
         editor += `
         <div class="char-form-block">
             <h3>Character: ${char.name || 'New'}</h3>
-            
-            <div class="form-row">
-                <label>Name</label>
-                <input value="${char.name}" oninput="updateField(${i},'name',this.value)">
-            </div>
-
-            <div class="form-row">
-                <label>Pronouns</label>
-                <input value="${char.pronouns}" oninput="updateField(${i},'pronouns',this.value)">
-            </div>
-
-            <div class="form-row">
-                <label>Player</label>
-                <input value="${char.player}" oninput="updateField(${i},'player',this.value)">
-            </div>
-
-            <div class="form-row">
-                <label>HP Current</label>
-                <input type="number" value="${char.current}" oninput="updateField(${i},'current',this.value)">
-            </div>
-
-            <div class="form-row">
-                <label>HP Max</label>
-                <input type="number" value="${char.max}" oninput="updateField(${i},'max',this.value)">
-            </div>
-
+            <div class="form-row"><label>Name</label><input value="${char.name}" oninput="updateField(${i},'name',this.value)"></div>
+            <div class="form-row"><label>Pronouns</label><input value="${char.pronouns}" oninput="updateField(${i},'pronouns',this.value)"></div>
+            <div class="form-row"><label>Player</label><input value="${char.player}" oninput="updateField(${i},'player',this.value)"></div>
+            <div class="form-row"><label>HP Current</label><input type="number" value="${char.current}" oninput="updateField(${i},'current',this.value)"></div>
+            <div class="form-row"><label>HP Max</label><input type="number" value="${char.max}" oninput="updateField(${i},'max',this.value)"></div>
             <div class="form-row">
                 <label>Portrait</label>
-                <select onchange="updateField(${i},'portrait',this.value)">
-                    ${buildPortraitOptions(char.portrait)}
-                </select>
+                <select onchange="updateField(${i},'portrait',this.value)">${buildPortraitOptions(char.portrait)}</select>
             </div>
-
             <div class="form-row">
                 <label>Jobs</label>
                 <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
@@ -260,7 +253,6 @@ function buildUI() {
                     `).join('')}
                 </div>
             </div>
-
             <div class="form-row" style="margin-top: 10px;">
                 <button onclick="removeCharacter(${i})" style="background: #922b21; color: white; border: none; padding: 5px; border-radius: 4px; cursor: pointer; width: 100%;">Remove</button>
             </div>
@@ -272,18 +264,23 @@ function buildUI() {
     if (!isViewMode && forms) {
         forms.innerHTML = editor;
         
-        const addButtonHtml = `
-            <div style="padding: 10px 0;">
+        // Form system operational control deck tools layout inject
+        const controlDeckHtml = `
+            <div style="padding: 10px 0; display: flex; flex-direction: column; gap: 8px;">
                 <button onclick="addCharacter()" style="background: #e76eff; color: #111; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-family: 'Aldrich', sans-serif; cursor: pointer; width: 100%; font-size: 0.9rem;">
                     + Add New Character
                 </button>
+                <div style="display: flex; gap: 6px;">
+                    <button onclick="copyStateToClipboard()" style="flex: 1; background: #2e4053; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">💾 Copy Backup String</button>
+                    <button onclick="importStateFromString()" style="flex: 1; background: #2e4053; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">📂 Import Layout String</button>
+                </div>
             </div>
         `;
-        forms.insertAdjacentHTML('beforeend', addButtonHtml);
+        forms.insertAdjacentHTML('beforeend', controlDeckHtml);
     }
 }
 
-/* ---------------- UPDATE ---------------- */
+/* ---------------- UPDATE CONTROLLERS ---------------- */
 
 function updateOverlayOnly() {
     partyData.forEach((char, i) => {
@@ -302,19 +299,15 @@ function updateOverlayOnly() {
             bar.style.width = percent + "%";
             bar.className = "progress-bar " + color;
         }
-
         if (hp) hp.textContent = `${char.current} / ${char.max}`;
-        
         if (img) {
             img.src = char.portrait;
-            
             if (char.current <= 0) {
                 img.classList.add("dead-portrait");
             } else {
                 img.classList.remove("dead-portrait");
             }
         }
-        
         if (nameEl) nameEl.textContent = char.name;
         if (pronounEl) pronounEl.textContent = char.pronouns;
         if (playerEl) playerEl.textContent = char.player;
@@ -329,7 +322,7 @@ function updateField(i, field, value) {
 
     partyData[i][field] = value;
     updateOverlayOnly();
-    saveTrackerState(); // Saves individual data adjustments instantly
+    saveTrackerState(); // Fires cache sequence inside operational scope layout arrays
 }
 
 function updateJob(charIndex, jobIndex, newJobValue) {
@@ -342,8 +335,8 @@ function updateJob(charIndex, jobIndex, newJobValue) {
     partyData[charIndex].jobs[jobIndex] = newJobValue;
     partyData[charIndex].jobs = partyData[charIndex].jobs.filter(j => j !== "");
     
+    saveTrackerState(); // State stored before trigger redraw to preserve split structures
     buildUI(); 
-    saveTrackerState(); // Saves newly formatted multi-class configuration changes
 }
 
 function addCharacter() {
@@ -358,27 +351,25 @@ function addCharacter() {
     };
 
     partyData.push(newChar);
+    saveTrackerState();
     buildUI();
-    saveTrackerState(); // Stores newly integrated rows safely inside memory
 }
 
 function removeCharacter(i) {
     if (confirm(`Are you sure you want to remove ${partyData[i].name || 'this character'}?`)) {
         partyData.splice(i, 1);
+        saveTrackerState();
         buildUI();
-        saveTrackerState(); // Locks in array mutations upon row deletion clicks
     }
 }
 
 /* ---------------- INIT & HOTKEYS ---------------- */
 
-// Setup sequence handles system cache checks directly on wake up
 function initTracker() {
     loadTrackerState();
     buildUI();
 }
 
-// Emergency clearance listener handler: Press Alt + Shift + R to force factory clear cache states
 window.addEventListener("keydown", (e) => {
     if (e.altKey && e.shiftKey && e.key.toLowerCase() === "r") {
         localStorage.removeItem("streamPartyTrackerData");
